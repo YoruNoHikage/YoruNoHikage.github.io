@@ -6,7 +6,7 @@ script: bash ./deploy.sh
 env:
   global:
   - CXX: g++-4.8
-  - ENCRYPTION_LABEL: "4b25a087402a"
+  - ENCRYPTION_LABEL: "ebe8fd6975b2y"
   - COMMIT_AUTHOR_EMAIL: "yorunohikage@gmail.com"
 addons:
   apt:
