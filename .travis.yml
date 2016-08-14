@@ -1,8 +1,15 @@
 language: node_js
 node_js:
-  - 4
+  - "4"
 script: bash ./deploy.sh
 env:
   global:
+  - CXX: g++-4.8
   - ENCRYPTION_LABEL: "4b25a087402a"
   - COMMIT_AUTHOR_EMAIL: "yorunohikage@gmail.com"
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
