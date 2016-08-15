@@ -49,9 +49,9 @@ git config user.email "$COMMIT_AUTHOR_EMAIL"
 git add --all
 git commit -m "Deploy to GitHub Pages: ${SHA} :shipit:"
 
-chmod 600 deploy_key
+chmod 600 ../deploy_key
 eval `ssh-agent -s`
-ssh-add deploy_key
+ssh-add ../deploy_key
 
 # Now that we're all set up, we can push.
 git push $SSH_REPO $TARGET_BRANCH
