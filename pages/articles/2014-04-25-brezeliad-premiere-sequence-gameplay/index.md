@@ -1,0 +1,13 @@
+---
+id: 299
+title: 'Brezeliad - Première séquence gameplay'
+date: "2014-04-25T23:15:11.000Z"
+author: YoruNoHikage
+layout: post
+guid: http://blog.yorunohikage.fr/?p=299
+path: "/2014/04/25/brezeliad-premiere-sequence-gameplay/"
+categories:
+  - Projects
+format: video
+---
+<iframe style="margin: auto; display: block;" width="560" height="315" src="http://www.youtube.com/embed/O2k6CuRQP8o" frameborder="0" allowfullscreen></iframe>

@@ -1,0 +1,205 @@
+---
+id: 113
+title: "Echofon for Firefox (Twitterfox) is not dead (et espérons qu'elle le restera)"
+date: "2013-06-16T18:30:55.000Z"
+author: YoruNoHikage
+layout: post
+guid: http://yorunohikage.olympe.in/blog/?p=113
+path: "/2013/06/16/echofon-for-firefox-twitterfox-is-not-dead-et-esperons-quelle-le-restera/"
+categories:
+  - Development
+  - Hacky-ish
+---
+Hello les gens !
+
+Certains connaissent peut-être cette extension pour Firefox appelée Echofon, qui n’existe plus de façon officielle. Le développement a été abandonné le 31 octobre 2012 mais l’application fonctionnait encore jusqu’à ce que Twitter stoppe son API 1… Mais ne vous inquiétez pas, il existe un patch pour cette extension afin qu’elle remarche correctement (merci à celui qui s’en est occupé). Je ne vais pas ici vous faire un tuto, vous trouverez tout ce qu’il vous faut sur l’article que j’ai lu : [Echofon for Firefox dies after Twitter API changes – Here’s how to get it back](http://www.techerator.com/2013/06/echofon-for-firefox-dies-after-twitter-api-changes-heres-how-to-get-it-back/ "Echofon for Firefox dies after Twitter API changes – Here’s how to get it back"). _A priori_, il n’y a rien qui pourraient compromettre vos données dans cette “mise à jour”.
+
+Ce dont je vais vous parler concerne les clés d’API de Twitter. Imaginez un instant que les clés d’Echofon soient compromises, n’importe qui pourrait se faire passer pour l’application. Ainsi les gens de chez Echofon auraient à les régénérer… Du coup, pour les applications encore fonctionnelles (Mac, iOS et Android), une petite mise à jour et ça serait bon. Mais dans notre cas, nous qui utilisons une appli abandonnée, nous n’aurons plus moyen de tweeter avec.
+
+Ne vous inquiétez pas ! Un développeur fera sûrement ce que l’on va faire, mais autant s’y préparer et le faire soi-même. Allons-y, Alonso !
+
+Commençons par **créer une application** chez Twitter avec tous les droits possibles (Lecture, écriture et MP). C’est ici que ça se passe : [Twitter for Developers](https://dev.twitter.com/apps "Twitter for Developers"). Vous remplissez comme vous voulez (en plus le nom de votre appli et votre site apparaîtront à chaque tweet sur certains clients twitter, c’est-y pas beau ?). Après ça, vous devriez avoir deux clés, la consumer key et le consumer secret. C’est ici que tout va se jouer pour Echofon for Firefox.
+
+Rendez-vous dans le dossier de l’extension, quelque chose comme `C:\Users\<votrecompte>\AppData\Roaming\Mozilla\Firefox\Profiles\<une clé aléatoire>.default\extensions\twitternotifier@naan.net\` sous Windows (les fichiers sont peut-être cachés). Allez dans le dossier modules et ouvrez `EchofonSign.jsm` et `TwitterClient.jsm`. C’est à l’intérieur de ces deux fichiers que tout va se jouer.
+
+Dans `TwitterClient.jsm`, modifier cette ligne avec votre consumer key :
+
+```js
+const OAUTH_CONSUMER_KEY = "";
+```
+
+Vous pouvez maintenant enregistrer et fermer ce fichier, nous n’en aurons plus besoin.
+
+**<span style="color: #ff0000;">Attention, ce que l’on va faire ensuite peut compromettre votre application auprès de Twitter. Ne distribuez pas publiquement votre application modifiée</span>**
+
+Il faut maintenant utiliser le consumer secret (donnée sensible) dans l’application. Echofon a pour cela utilisé du code natif compilé afin de générer la signature que Twitter a besoin pour vérifier qu’il s’agit bien de l’application. Ma solution est là un peu bancale (et à utiliser de façon personnelle), mais vous pouvez très bien refaire un code natif et distribuer l’application modifiée si vous souhaitez que des gens se connecte à Twitter avec Echofon enregistrée avec vos clés.
+
+Pour ce faire, nous allons avoir besoin de crypter les informations avec cette clé. Premièrement, allez à cette ligne dans le fichier `EchofonSign.jsm` (environ 170). Vous devriez y voir ceci :
+
+```js
+EchofonSign.OAuthSignature = function(str, secret)
+{
+  if (Cc['@naan.net/twitterfox-sign;1']) {
+    var com = Cc['@naan.net/twitterfox-sign;1'].getService(Ci.nsITwitterFoxSign);
+    return com.OAuthSignature(str, secret);
+  }
+  else {
+    return OAuthSignatureByLibrary(str, secret);
+  }
+}
+```
+
+Bon, clairement, on va remplacer ça par notre propre signature puisqu’il faut que Twitter identifie notre application. Dans un premier temps, commentez ou supprimez le contenu de la fonction et ajoutez-y ceci :
+
+```js
+var consumer_secret = "";
+var signature = b64_hmac_sha1(consumer_secret + "&" + secret, str);
+
+return signature;
+```
+
+_Note : J’imagine que vous pouvez vous apercevoir du **danger** maintenant. Le consumer secret est écrit en dur dans l’application, c’est pourquoi votre Echofon hybride ne doit pas être partagé si vous utilisez cette méthode._
+
+Dans un second temps, il va falloir **ajouter le cryptage HMAC-SHA1**, vous voyez bien que je fais appel à une fonction `b64_hmac_sha1()`. Si vous voulez en savoir plus concernant la méthode d’appel à twitter, vous pouvez aller visiter la page concernant [l’autorisation d’une requête avec OAuth](https://dev.twitter.com/docs/auth/authorizing-request "Authorizing a request") et celle concernant la [création de la signature](https://dev.twitter.com/docs/auth/creating-signature "Creating a signature"). J’utilise pour ma part ce script : [codebird-js/sha1.js sur GitHub](https://github.com/mynetx/codebird-js/blob/master/sha1.js "codebird-js/sha1.js sur GitHub") auquel j’y **enlève la fonction bin2b64 puisqu’elle existe déjà** dans le fichier. Je vous conseille donc de copier-coller ceci à la fin de votre fichier `EchofonSign.jsm` :
+
+```js
+/*
+ * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined
+ * in FIPS PUB 180-1
+ * Version 2.1 Copyright Paul Johnston 2000 - 2002.
+ * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
+ * Distributed under the BSD License
+ * See http://pajhome.org.uk/crypt/md5 for details.
+ */
+
+var hexcase = 0;
+
+function hex_sha1(s){return binb2hex(core_sha1(str2binb(s),s.length * chrsz));}
+function b64_sha1(s){return binb2b64(core_sha1(str2binb(s),s.length * chrsz));}
+function str_sha1(s){return binb2str(core_sha1(str2binb(s),s.length * chrsz));}
+function hex_hmac_sha1(key, data){ return binb2hex(core_hmac_sha1(key, data));}
+function b64_hmac_sha1(key, data){ return binb2b64(core_hmac_sha1(key, data));}
+function str_hmac_sha1(key, data){ return binb2str(core_hmac_sha1(key, data));}
+
+function sha1_vm_test()
+{
+  return hex_sha1("abc") == "a9993e364706816aba3e25717850c26c9cd0d89d";
+}
+
+function core_sha1(x, len)
+{
+  x[len >> 5] |= 0x80 << (24 - len % 32);
+  x[((len + 64 >> 9) << 4) + 15] = len;
+
+  var w = Array(80);
+  var a =  1732584193;
+  var b = -271733879;
+  var c = -1732584194;
+  var d =  271733878;
+  var e = -1009589776;
+
+  for(var i = 0; i < x.length; i += 16)
+  {
+    var olda = a;
+    var oldb = b;
+    var oldc = c;
+    var oldd = d;
+    var olde = e;
+
+    for(var j = 0; j < 80; j++)
+    {
+      if(j < 16) w[j] = x[i + j];
+      else w[j] = rol(w[j-3] ^ w[j-8] ^ w[j-14] ^ w[j-16], 1);
+      var t = safe_add(safe_add(rol(a, 5), sha1_ft(j, b, c, d)),
+                       safe_add(safe_add(e, w[j]), sha1_kt(j)));
+      e = d;
+      d = c;
+      c = rol(b, 30);
+      b = a;
+      a = t;
+    }
+
+    a = safe_add(a, olda);
+    b = safe_add(b, oldb);
+    c = safe_add(c, oldc);
+    d = safe_add(d, oldd);
+    e = safe_add(e, olde);
+  }
+  return Array(a, b, c, d, e);
+
+}
+
+function sha1_ft(t, b, c, d)
+{
+  if(t < 20) return (b & c) | ((~b) & d);
+  if(t < 40) return b ^ c ^ d;
+  if(t < 60) return (b & c) | (b & d) | (c & d);
+  return b ^ c ^ d;
+}
+
+function sha1_kt(t)
+{
+  return (t < 20) ?  1518500249 : (t < 40) ?  1859775393 :
+         (t < 60) ? -1894007588 : -899497514;
+}  
+
+function core_hmac_sha1(key, data)
+{
+  var bkey = str2binb(key);
+  if(bkey.length > 16) bkey = core_sha1(bkey, key.length * chrsz);
+
+  var ipad = Array(16), opad = Array(16);
+  for(var i = 0; i < 16; i++)
+  {
+    ipad[i] = bkey[i] ^ 0x36363636;
+    opad[i] = bkey[i] ^ 0x5C5C5C5C;
+  }
+
+  var hash = core_sha1(ipad.concat(str2binb(data)), 512 + data.length * chrsz);
+  return core_sha1(opad.concat(hash), 512 + 160);
+}
+
+function safe_add(x, y)
+{
+  var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+  var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+  return (msw << 16) | (lsw & 0xFFFF);
+}
+
+function rol(num, cnt)
+{
+  return (num << cnt) | (num >>> (32 - cnt));
+}
+
+function str2binb(str)
+{
+  var bin = Array();
+  var mask = (1 << chrsz) - 1;
+  for(var i = 0; i < str.length * chrsz; i += chrsz)
+    bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (24 - i%32);
+  return bin;
+}
+
+function binb2str(bin)
+{
+  var str = "";
+  var mask = (1 << chrsz) - 1;
+  for(var i = 0; i < bin.length * 32; i += chrsz)
+    str += String.fromCharCode((bin[i>>5] >>> (24 - i%32)) & mask);
+  return str;
+}
+
+function binb2hex(binarray)
+{
+  var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+  var str = "";
+  for(var i = 0; i < binarray.length * 4; i++)
+  {
+    str += hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8+4)) & 0xF) +
+           hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8  )) & 0xF);
+  }
+  return str;
+}
+```
+
+Voilà, vous devriez pouvoir vous connecter à Echofon maintenant et autoriser votre propre application à accéder à Twitter. :)

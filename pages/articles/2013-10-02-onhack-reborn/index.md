@@ -1,0 +1,28 @@
+---
+id: 177
+title: OnHack Reborn !
+date: "2013-10-02T13:35:20.000Z"
+author: YoruNoHikage
+layout: post
+guid: http://yorunohikage.olympe.in/blog/?p=177
+path: "/2013/10/02/onhack-reborn/"
+categories:
+  - Gaming
+---
+__NB : Ici il y avait une image avant :'(__
+
+Bon, comme vous voyez sur l’image, j’ai du temps pour vous parler avant que ce petit téléchargement se termine :D.
+
+Bon, petite présentation et, comme d’habitude, trop flemmard pour écrire un truc à moi, je vous file une citation.
+
+> OnHack est une simulation de piratage informatique, dans un univers complètement virtuel. Il s’accompagne d’un mode solo permettant de suivre un scénario ainsi que d’un mode multi permettant d’attaquer les autres joueurs.
+
+Le jeu a été lancé il y a 3 ans puis fermé par son créateur, a.k.a. Shivaan Keldon. Relancé récemment, les anciens joueurs sont revenus et des vidéos de présentation et de premiers pas ont été mises en ligne. Cela m’a permis de redécouvrir le jeu. Je me souviens m’y être inscrit, avoir essayé de me dépatouiller avec l’aide puis avoir abandonné par manque d’intérêt. A l’heure actuelle, je m’y suis remis et je peux vous dire que ça déboîte. J’ai pas tant que ça de choses à dire si ce n’est qu’il faut que vous veniez jouer ou au moins faire passer le message à des gens intéressés.
+
+<iframe style="margin: auto; display: block;" width="560" height="315" src="http://www.youtube.com/embed/hb6KRIXm1oo" frameborder="0" allowfullscreen></iframe>
+
+Une suite est prévue, elle sera beaucoup plus évoluée que l’actuelle et promet beaucoup. Pour rappel, OnHack avait fait l’objet d’un test que vous pouvez retrouver sur l’archive en lecture seule (les images reviendront bientôt) : [Test de OnHack sur JeuxAmateurs.fr](http://old.jeuxamateurs.fr/jeux/fiche-45-onhack.php "Test de OnHack sur JeuxAmateurs.fr")
+
+Ah mes téléchargements sont finis, je retourne jouer ! (Bon, j’ai pas mis 60 mins à écrire l’article hein xD).
+
+**Post-Note :** Le “Je te b” de Shivaan sur le chat, c’est un “je te ban” qui m’est adressé. Mais j’ai pas été banni parce que je suis trop sympa quoi \o/.

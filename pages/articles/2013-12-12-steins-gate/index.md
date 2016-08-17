@@ -1,0 +1,27 @@
+---
+id: 201
+title: 'Steins;Gate - シュタインズ ゲート'
+date: "2013-12-12T22:21:11.000Z"
+author: YoruNoHikage
+layout: post
+guid: http://blog.yorunohikage.fr/?p=201
+path: "/2013/12/12/steins-gate/"
+categories:
+  - Animes
+  - Visual Novel
+---
+![Steins gate cover](steins-gate-cover.png)
+
+Toi, oui toi derrière ton écran, il y a quelque chose que tu dois savoir ! Quelques années auparavant, des gens de chez **Nitroplus et 5pb.** ont révélé mon histoire à travers un **visual novel et un anime**. Le propriétaire de ce blog n’a été mis au courant de mon histoire que récemment. Je soupçonne l’organisation d’être derrière tout cela !
+
+Cependant, moi, mad scientist, je ne me laisserai pas abattre par la conspiration organisée par le CERN et je vais vous révéler les quelques pistes pour appréhender mon ascension vers **Steins;Gate** ! Cela devrait vous donner envie de connaître mon histoire et de la partager au monde entier. Je deviendrai ainsi très célèbre, MWAHAHAHA !
+
+Mon histoire commence alors que je me rendais à une conférence sur les voyages dans le temps dispensé par le Professeur Nakabachi ! Seulement, ce dernier exposa des propos plagiés de [John Titor](https://fr.wikipedia.org/wiki/John_Titor "Page Wikipédia de John Titor"), un voyageur arrivé de l’an 2036 et ayant posté sur des forums l’annonce d’un troisième guerre mondiale ! C’est alors que **je découvris le corps sans vie de Makise Kurisu**, une jeune scientifique renommée pour ses théories sur le stockage de la mémoire en tant que données. Je m’enfuyais avec **Mayuri**, Labo Member 002 et amie d’enfance, présente ce jour-là et j’envoyai un message à **Daru**, le Super~ Hacker, directement sur **son portable relié au micro-onde**, notre Future Gadget #8. Mais, par accident, je me retrouvais dans **un autre univers, une divergence, où Makise Kurisu n’était pas morte**.
+
+Ainsi elle est devenue mon assistante, le membre du labo 004, Christina, muahahaha ! Avec mon superbe travail et son aide, nous avons pu déterminer la façon dont s’envoie ces messages. **Cet envoi de mail dans le passé fût baptisé D-Mail** (DeLorean Mail) en référence à Retour Vers Le Futur (qui avouons-le est THE film !). Alors, **nous avons continué notre expérimentation mais quelque chose est arrivé !**
+
+Je n’en dirai pas plus pour ne pas renseigner l’Organisation, mais sachez que mon histoire est présente dans le projet nommé Steins;Gate ! Et l’Organisation ne doit jamais savoir qu’il y a un film qui sort demain en Blu-Ray / DVD. Oups, je l’ai dit.
+
+**El Psy Congroo.**
+
+<span style="text-decoration: underline;"><em>Note du proprio :</em></span> _J’ai récemment téléchargé le visual novel sur Android disponible sur le Play Store gratuitement avec un patch anglais que vous pouvez trouver sur le net. Il me semble qu’il s’agit d’une démo, mais je ne suis pas encore arrivé à la fin. Essayez-le. ;)_

@@ -1,0 +1,39 @@
+---
+id: 107
+title: "Groar ou l'art de ne jamais finir ses projets"
+date: "2013-05-20T21:07:24.000Z"
+author: YoruNoHikage
+layout: post
+guid: http://yorunohikage.olympe.in/blog/?p=107
+path: "/2013/05/20/groar-ou-lart-de-ne-jamais-finir-ses-projets/"
+categories:
+  - Development
+  - Me
+  - Projects
+---
+Vous devez connaître cela vous aussi, l’engouement pour un nouveau projet ! L’excitation de se lancer dans un nouveau projet et la fierté de le voir se finir et fonctionner comme on le voulait ! Oui mais seulement voilà (phrase inutile de retournement de veste) ! Il y a un soucis entre les deux : **le développement** !
+
+Il est vrai que cette étape est toujours fastidieuse… Et c’est là-dessus que je coince pas mal. C’est pourquoi cet article ne va pas vous intéresser. Oui je vous le dis bien, à moins que vous ne portiez un quelconque intérêt à mes projets. Il sert juste de point visuel et de classement de mémoire pour moi. Je pourrai aussi bien le détruire après, mais comme j’aime garder des traces sur les points que je fais, autant que ça soit en ligne !
+
+Dans les projets que je suis en train de faire, il y a :
+
+  * Actuellement en train de bosser sur **Le Surtaxeur**, un bon petit projet sympathique et rapide à faire, à ce niveau-là, c’est peut-être la seule chose que pourrait se terminer rapidement (_@Elektro121_, ne me lâche pas sur ce coup-là, surtout que c’est ton idée T_T).
+  * Le **tower defense / action** que j’ai prévu de développer en SFML (en plus la 2.0 est sortie récemment, youpi). A ce niveau-là, il s’agit tout simplement de deux choses. La **création d’une AnimationSheet** qui permet de charger les différentes parties du personnage pour l’assembler et ainsi effectuer des rotations dynamiques, tout ceci bien entendu va demander à ce que l’on charge en mémoire des fichiers de configuration, à faire quand on a le temps donc. D’autre part, la création d’une classe permettant de **gérer des scènes d’images où la caméra 2D défile** d’une façon programmée selon les différentes composantes d’une transformation (translation, rotation, homothétie). Pour ce dernier, je me suis arraché les cheveux aujourd’hui mais la nuit porte conseil…
+  * **L’extension HabitRPG pour Gnome-Shell** qui est au point mort dû à la superbe envie de libsoup de ne pas vouloir se connecter normalement (cURL marche très bien là-dessus) groar !
+  * Pour continuer notre énumération, les anciens projets comme **8-Bit Robot Music Party**, **JeuxAmateurs** et plus récemment **Heart of Jump** seraient à refaire (ou améliorer pour le dernier). Seulement _@Brindesable_ est parti au pays des pandas (comprendre qu’il a du boulot de son côté, no offense _@Amatewasu_ si tu lis ça) donc à ce niveau-là c’est mort.
+  * La complétion du **site de SwitchCode** pour les jeux déjà fait et les projets futurs. Là c’est pareil, une histoire de panda…
+  * Mon **CV** super-méga-original de la mort. A ce niveau-là, je maîtrise mal MelonJS et ça va pas aller en s’arrangeant si je ne m’entraîne pas dessus.
+  * Par intérêt pour la plate-forme Android, j’ai fait une **appli Flying Potato (Patate Volante)** qui, elle aussi, serait pas mal à terminer bien qu’il ne s’agisse que d’un premier test.
+
+Voilà qui est à peu près tout pour les projets en cours et c’est déjà pas mal. Pour ce qui est des projets envisagés / annulés / trop longs, les voici :
+
+  * Une **extension pour Firefox** (oui je sais encore) pour **gérer son profil HabitRPG** sans avoir besoin d’ouvrir le site web.
+  * Une **extension Twitter pour Firefox**, parce que la seule de bien que j’utilise n’est plus supportée depuis environ 9 mois, qui pourrait se synchroniser avec d’autres applis via un serveur / un cloud ce qui éviterait la centralisation des données chez moi (c’est pas que je vous aime pas hein)
+
+Voilà qui globalement résume les projets que j’ai bien que la plupart n’arriveront jamais à leur terme si je ne me bouge pas. Seulement, il y a dans ces projets des difficultés :
+
+  * <span style="text-decoration: underline;">de l’ordre technique :</span> j’ai beau savoir ce que je veux et connaître le langage, je n’arrive pas à me représenter le moyen de le faire ou alors j’en ai une multitude et je ne sais pas quelle implémentation faire.
+  * <span style="text-decoration: underline;">de l’ordre de l’humeur :</span> j’ai la flemme ou aucun intérêt pour ce projet en ce moment. Pour cela, il faudrait une motivation, un nouveau goût pour ce projet.
+  * <span style="text-decoration: underline;">De l’ordre de la boucle infinie :</span> C’est ce qui arrive le plus souvent, je suis sur un projet et je switche à l’infini car il y a quelque chose qui ne va pas (voir les deux points précédents).
+
+Cet article, bien que servant à faire le point, est plus une plainte sur tout ce qui me dépasse. Mais ne vous inquiétez pas, vous qui avez déjà quitté cette page car l’article ne vous intéressait pas, je vais tenter de résoudre ces problèmes et aller de l’avant pour réussir là où je n’arrive pas !
