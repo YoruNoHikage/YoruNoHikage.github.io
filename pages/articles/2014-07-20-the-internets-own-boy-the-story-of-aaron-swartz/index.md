@@ -1,0 +1,17 @@
+---
+id: 312
+title: "The Internet's Own Boy : The Story of Aaron Swartz"
+date: "2014-07-20T23:50:04.000Z"
+author: YoruNoHikage
+layout: post
+guid: http://blog.yorunohikage.fr/?p=312
+path: "/2014/07/20/the-internets-own-boy-the-story-of-aaron-swartz/"
+categories:
+  - Documentary
+format: video
+---
+<iframe style="margin: auto; display: block;" width="560" height="315" src="https://www.youtube.com/embed/7ZBe1VFy0gc" frameborder="0" allowfullscreen></iframe>
+
+À voir absolument ! Un documentaire très intéressant et touchant sur le personnage d’Aaron Swartz, co-fondateur de Reddit, co-auteur de la spécification RSS et bien d’autres projets.
+
+[Version WebM](http://media.suumitsu.eu/?file=Docu/The%20Internet%27s%20Own%20Boy.webm&sort=asc)
