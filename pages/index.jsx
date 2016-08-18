@@ -48,6 +48,9 @@ class SiteIndex extends React.Component {
 
       // Fix paths for images, videos... relative to blog post
       const bodyWithFixedPaths = body.replace(/<[^>]+src="(.+)"[^>]*>/g, (match, g1) => {
+        if(g1.startsWith('http')) {
+          return match;
+        }
         return match.replace(g1, page.path + g1)
       })
 
