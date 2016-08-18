@@ -6,37 +6,21 @@ import './style.css'
 import '../../static/fonts/fontawesome/style.css'
 
 class SiteLinks extends React.Component {
-    render() {
-
-        return (
-            <div className='blog-social'>
-              <ul>
-                <li>
-                  <a href={ config.siteTwitterUrl }><i className='fa fa-twitter'></i></a>
-                </li>
-                <li>
-                  <a href={ config.siteGithubUrl }><i className='fa fa-github-alt'></i></a>
-                </li>
-                <li>
-                  <a href={ config.siteVkUrl }><i className='fa fa-vk'></i></a>
-                </li>
-              </ul>
-              <ul>
-                <li>
-                  <a href={ config.siteEmailUrl }><i className='fa fa-envelope-o'></i></a>
-                </li>
-                <li>
-                  <a href={ config.siteTelegramUrl }><i className='fa fa-paper-plane'></i></a>
-                </li>
-              </ul>
-              <ul>
-                <li>
-                  <a href={ config.siteRssUrl }><i className='fa fa-rss'></i></a>
-                </li>
-              </ul>
-            </div>
-            );
-    }
+  render() {
+    return (
+      <div className='blog-social'>
+        <ul>
+          <li><a href={ config.social.twitter }><span className='fa fa-twitter'></span></a></li>
+          <li><a href={ config.social.github }><span className='fa fa-github'></span></a></li>
+          <li><a href={ config.social.linkedin }><span className='fa fa-linkedin'></span></a></li>
+          <li><a href={ config.social.email }><span className='fa fa-envelope-o'></span></a></li>
+          <li><a href={ config.social.youtube }><span className='fa fa-youtube-play'></span></a></li>
+          <li><a href={ config.social.lastfm }><span className='fa fa-lastfm'></span></a></li>
+          <li><a href={ config.social.steam }><span className='fa fa-steam'></span></a></li>
+        </ul>
+      </div>
+    )
+  }
 }
 
 export default SiteLinks

@@ -5,6 +5,12 @@
 	font-size: responsive 20px 36px;
 	margin-top: 0;
 }
+.blog-page a {
+	text-decoration: underline;
+}
+.blog-page a:hover {
+	text-decoration: none;
+}
 .blog-page p {
 	font-size: 16px;
 	line-height: 26px;

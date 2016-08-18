@@ -10,53 +10,73 @@ import SitePost from '../components/SitePost'
 import SiteSidebar from '../components/SiteSidebar'
 
 class SiteIndex extends React.Component {
-    render() {
-        const pageLinks = []
-        // Sort pages.
-        const sortedPages = sortBy(this.props.route.pages, (page) => access(page, 'data.date')
-        ).reverse()
-        sortedPages.forEach((page) => {
-            if (access(page, 'file.ext') === 'md' && access(page, 'data.layout') === 'post') {
-                const title = access(page, 'data.title') || page.path
-                const description = access(page, 'data.description')
-                const datePublished = access(page, 'data.date')
-                const category = access(page, 'data.category')
+  render() {
+    const { pages } = this.props.route;
 
-                pageLinks.push(
-                    <div className='blog-post'>
-                      <time dateTime={ moment(datePublished).format('MMMM D, YYYY') }>
-                        { moment(datePublished).format('MMMM YYYY') }
-                      </time>
-                      <span style={ {    padding: '5px'} }></span>
-                      <span className='blog-category'>{ category }</span>
-                      <h2><Link style={ {    borderBottom: 'none',} } to={ prefixLink(page.path) } > { title } </Link></h2>
-                      <p dangerouslySetInnerHTML={ {    __html: description} } />
-                      <Link className='readmore' to={ prefixLink(page.path) }> Read
-                      </Link>
-                    </div>
-                )
-            }
-        })
+    const articles = pages.filter(page => access(page, 'file.ext') === 'md' && access(page, 'data.layout') === 'post');
+    const sortedArticles = sortBy(articles, (article) => access(article, 'data.date')).reverse();
 
+    const formattedArticles = sortedArticles.map((page, i) => {
+      const title = access(page, 'data.title') || page.path;
+      const body = access(page, 'data.body');
+      const datePublished = access(page, 'data.date');
+      const category = access(page, 'data.category');
+      const categories = access(page, 'data.categories') || [];
+      category && categories.push(category);
+
+      if(i > 5) {
         return (
-            <DocumentTitle title={ config.siteTitle }>
-              <div>
-                <SiteSidebar {...this.props}/>
-                <div className='content'>
-                  <div className='main'>
-                    <div className='main-inner'>
-                      { pageLinks }
-                    </div>
-                  </div>
-                </div>
+          <div className='blog-post' style={{
+            margin: '0',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+          }}>
+            <time dateTime={ moment(datePublished).format('MMMM D, YYYY') }>
+              { moment(datePublished).format('MMMM YYYY') }
+            </time>
+            <h2 style={{
+              display: 'inline',
+              fontSize: '16px',
+              marginLeft: '5px',
+            }}>
+              <Link style={{ borderBottom: 'none' }} to={ prefixLink(page.path) } > { title } </Link>
+            </h2>
+          </div>
+        );
+      }
+
+      return (
+          <div className='blog-post'>
+            <time dateTime={ moment(datePublished).format('MMMM D, YYYY') }>
+              { moment(datePublished).format('MMMM YYYY') }
+            </time>
+            <ul style={{display: 'inline-block', margin: '0', padding: '0'}}>{categories.map(category => <li className='blog-category'>{category}</li>)}</ul>
+            <h2><Link to={ prefixLink(page.path) } > { title } </Link></h2>
+            <div dangerouslySetInnerHTML={{ __html: body }} />
+          </div>
+      );
+    });
+
+    return (
+      <DocumentTitle title={config.siteTitle}>
+        <div>
+          <SiteSidebar {...this.props}/>
+          <div className='content'>
+            <div className='main'>
+              <div className='main-inner'>
+                {formattedArticles}
               </div>
-            </DocumentTitle>
-        )
-    }
+            </div>
+          </div>
+        </div>
+      </DocumentTitle>
+    )
+  }
 }
 
 SiteIndex.propTypes = {
-    route: React.PropTypes.object,
+  route: React.PropTypes.object,
 }
 
 export default SiteIndex

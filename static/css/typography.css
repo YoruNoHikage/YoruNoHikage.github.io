@@ -118,7 +118,7 @@ pre {
 	overflow: auto;
 }
 code, kbd, pre, samp {
-	font-family: monospace, monospace;
+	font-family: Inconsolata, monospace;
 }
 code {
 	padding: 26px;
@@ -394,7 +394,10 @@ progress {
 }
 blockquote {
 	font-style: italic;
+	border-left: 5px solid #eee;
+	color: #aaa;
 	padding-left: 1.4375rem;
+	margin: 0;
 }
 @media screen and (min-width:40em) {
 	blockquote {

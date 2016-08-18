@@ -1,4 +1,4 @@
-p > code, span > code {
+:not(pre) > code {
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;

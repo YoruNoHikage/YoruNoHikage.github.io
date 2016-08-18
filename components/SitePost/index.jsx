@@ -6,49 +6,52 @@ import { prefixLink } from 'gatsby-helpers'
 import access from 'safe-access'
 import { config } from 'config'
 import ReadNext from '../ReadNext'
+import AuthorCard from '../AuthorCard'
 import './style.css'
 import '../../static/css/highlight.css'
+import profilePic from '../../pages/yorunohikage.png'
 
 class SitePost extends React.Component {
-    render() {
-        const {route} = this.props
-        const post = route.page.data
-        const home = (
-        <div>
-          <Link className='gohome' to={ prefixLink('/') }> All Articles
-          </Link>
-        </div>
-        )
+  render() {
+    const {route} = this.props
+    const post = route.page.data
+    const home = (
+      <div>
+        <Link className='gohome' to={ prefixLink('/') }> All Articles</Link>
+      </div>
+    )
 
-        return (
-            <div>
-              { home }
-              <div className='blog-single'>
-                <div className='text'>
-                  <h1>{ post.title }</h1>
-                  <div dangerouslySetInnerHTML={ {    __html: post.body} } />
-                  <div className='date-published'>
-                    <em>Published { moment(post.datePublished).format('D MMM YYYY') }</em>
-                  </div>
-                </div>
-                <div className='footer'>
-                  <ReadNext post={ post } {...this.props}/>
-                  <hr></hr>
-                  <p>
-                    { config.siteDescr }
-                    <a href={ config.twitter }>
-                      <br></br> <strong>{ config.siteAuthor }</strong> on Twitter</a>
-                  </p>
-                </div>
-              </div>
-            </div>
-            );
+    const dateStyle = {
+      textAlign: 'center',
+      display: 'block',
+      color: 'grey',
+      marginBottom: '50px',
     }
+
+    return (
+      <div>
+        { home }
+        <div className='blog-single'>
+          <div className='text'>
+            <h1>{ post.title }</h1>
+            <em style={dateStyle}><time dateTime={post.date}>{ moment(post.date).format('D MMMM YYYY') }</time></em>
+            <div dangerouslySetInnerHTML={{ __html: post.body }} />
+          </div>
+          <div className='footer'>
+            <ReadNext post={post} {...this.props}/>
+            <hr></hr>
+            <AuthorCard name={config.siteAuthor} username={config.siteAuthorUsername} avatar={profilePic} twitterLink={config.social.twitter}>
+              {config.siteAuthorDescription}
+            </AuthorCard>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
 
 SitePost.propTypes = {
-    post: React.PropTypes.object.isRequired,
-    pages: React.PropTypes.array,
+  pages: React.PropTypes.array,
 }
 
 export default SitePost
