@@ -6,7 +6,7 @@ TARGET_BRANCH="master"
 
 function doCompile {
   npm install && gatsby build
-  [[ -e CNAME ]] && cp CNAME build/CNAME
+  [[ -e CNAME ]] && cp CNAME public/CNAME
 }
 
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
