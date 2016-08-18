@@ -46,6 +46,11 @@ class SiteIndex extends React.Component {
         );
       }
 
+      // Fix paths for images, videos... relative to blog post
+      const bodyWithFixedPaths = body.replace(/<[^>]+src="(.+)"[^>]*>/g, (match, g1) => {
+        return match.replace(g1, page.path + g1)
+      })
+
       return (
           <div className='blog-post'>
             <time dateTime={ moment(datePublished).format('MMMM D, YYYY') }>
@@ -53,7 +58,7 @@ class SiteIndex extends React.Component {
             </time>
             <ul style={{display: 'inline-block', margin: '0', padding: '0'}}>{categories.map(category => <li className='blog-category'>{category}</li>)}</ul>
             <h2><Link to={ prefixLink(page.path) } > { title } </Link></h2>
-            <div dangerouslySetInnerHTML={{ __html: body }} />
+            <div dangerouslySetInnerHTML={{ __html: bodyWithFixedPaths }} />
           </div>
       );
     });
