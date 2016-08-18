@@ -1,12 +1,18 @@
-siteTitle = "Blog by John Doe"
-siteDescr = "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-siteAuthor = "John Doe"
+siteTitle = "YoruNoHikage"
+siteDescr = "I'm a lonesome programmer"
+siteAuthorUsername = "YoruNoHikage"
+siteAuthor = "Alexis Launay"
+siteAuthorDescription = "Frenchy student @[ISENBrest](http://twitter.com/ISENBrest) working.
+Web & Game #indie Dev who likes flying potatoes ! @[westindiecollective](http://westindiecollective.org) member.
+日本語を勉強する。 Want to practise music !"
 
-siteTelegramUrl = "#"
-siteTwitterUrl = "#"
-siteGithubUrl = "#"
-siteEmailUrl = "#"
-siteRssUrl = "#"
-siteVkUrl = "#"
+[social]
+twitter = "http://twitter.com/YoruNoHikage"
+github = "http://github.com/YoruNoHikage"
+linkedin = "https://www.linkedin.com/in/alexislaunay"
+youtube = "http://youtube.com/YoruNoHikage"
+lastfm = "http://last.fm/user/YoruNoHikage"
+steam = "http://steamcommunity.com/id/yorunohikage/"
+email = "yorunohikage@gmail.com"
 
-linkPrefix = "/gatsby-starter-lumen"
+linkPrefix = "/"
