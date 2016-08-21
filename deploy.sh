@@ -7,7 +7,7 @@ TARGET_BRANCH="master"
 function doCompile {
   npm install && gatsby build
   [[ -e CNAME ]] && cp CNAME public/CNAME
-  [[ -e favicon.ico ]] && cp favicon.ico public/favicon.ico
+  [[ -e favicon.ico || -e favicon.png ]] && cp favicon.* public/
 }
 
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify

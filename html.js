@@ -30,7 +30,8 @@ module.exports = React.createClass({
               <title>
                 { title }
               </title>
-              <link rel="Shortcut Icon" href='/favicon.ico' type="image/x-icon" />
+              <link rel="shortcut icon" href='/favicon.ico' type="image/x-icon" />
+              <link rel="shortcut icon" href='/favicon.png' type="image/png" />
               { fonts.map(link => <link href={link} rel="stylesheet" type="text/css" />) }
               { css }
             </head>
