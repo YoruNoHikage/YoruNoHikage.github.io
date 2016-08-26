@@ -6,7 +6,7 @@ path: "/2016/08/25/rest-api-made-easy-with-apex-aws-lambda-and-aws-api-gateway"
 categories:
 - Development
 ---
-_Recently, I was asked to rewrite the backend part of the company I'm currently working on with AWS services and Apex, an utility used to facilitate the deployments of [AWS Lambda](https://aws.amazon.com/lambda/) functions. In short terms, AWS Lambda is a FaaS (Functions as a Service): you code simple functions that get input and return output, that's it, nothing else. Similarly, it exists [hook.io](http://hook.io) or [Google Cloud Functions](https://cloud.google.com/functions/). When it comes to [AWS API Gateway](https://aws.amazon.com/api-gateway/), it is a way of mapping your Lambda functions to endpoints, it can do content type matching, security, and stuff you often repeat in your code. So let's dive in!_
+_Recently, I was asked to rewrite the backend part of the company I'm currently working for with AWS services and Apex, an utility used to facilitate the deployment of [AWS Lambda](https://aws.amazon.com/lambda/) functions. In short terms, AWS Lambda is a FaaS (Functions as a Service): you code simple functions that get input and return output, that's it, nothing else. Similarly, it exists [hook.io](http://hook.io) or [Google Cloud Functions](https://cloud.google.com/functions/). When it comes to [AWS API Gateway](https://aws.amazon.com/api-gateway/), it is a way of mapping your Lambda functions to endpoints, it can do content type matching, security, and stuff you often repeat in your code. So let's dive in!_
 
 An AWS Lambda function can be represented like this:  
 ```js
@@ -158,6 +158,9 @@ I've shorten everything but there is a link to a boilerplate at the end of the a
   - `never`: rejects the method request if the content-type doesn't match anything in mapping template.
 
   This option made me go crazy during an hour, I had my request mapped only when I was not sending any body (it was set on the `never` option).  
+
+Now that everything is settled, you can deploy using the script:  
+`python api-gateway-deployer/src/__init__.py project.json`
 
 ### Apex API Gateway
 
