@@ -6,6 +6,8 @@ path: "/2016/08/25/rest-api-made-easy-with-apex-aws-lambda-and-aws-api-gateway"
 categories:
 - Development
 ---
+**Update September, 4th:** Adding an example on how to configure CORS for your lambdas.
+
 _Recently, I was asked to rewrite the backend part of the company I'm currently working for with AWS services and Apex, an utility used to facilitate the deployment of [AWS Lambda](https://aws.amazon.com/lambda/) functions. In short terms, AWS Lambda is a FaaS (Functions as a Service): you code simple functions that get input and return output, that's it, nothing else. Similarly, it exists [hook.io](http://hook.io) or [Google Cloud Functions](https://cloud.google.com/functions/). When it comes to [AWS API Gateway](https://aws.amazon.com/api-gateway/), it is a way of mapping your Lambda functions to endpoints, it can do content type matching, security, and stuff you often repeat in your code. So let's dive in!_
 
 An AWS Lambda function can be represented like this:  
@@ -177,6 +179,96 @@ This will add a `rest-api-id` field in your `project.json` that can be used late
 `apex-api-gateway update`
 
 Now you can develop and deploy without bothering about AWS user interface, you only need, of course, appropriate security roles.
+
+### Adding CORS
+
+**Warning:** From now on, if you follow this instructions, the configuration won't work with the Python script since `apex-api-gateway` has more advanced features required for this.
+
+I struggled a lot to add CORS to my lambdas, so here's the way to deal with it for anyone annoyed. First, what you need is replying to preflight request, the `OPTIONS` request that many browsers send before the real request to validate the access to a resource. So, let's add what you need in the `project.json`:
+
+```js
+{
+  /* ... */
+  "x-api-gateway": {
+    "paths": {
+      ".+": {
+        "options": {
+          "summary": "CORS support",
+          "description": "Enable CORS by returning correct headers\n",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "tags": ["CORS"],
+          "x-amazon-apigateway-integration": {
+            "type": "mock",
+            "requestTemplates": { "application/json": "{\n \"statusCode\" : 200\n}\n" },
+            "responses": {
+              "default": {
+                "statusCode": "200",
+                "responseParameters": {
+                  "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                  "method.response.header.Access-Control-Allow-Methods": "'GET, PUT, POST, DELETE'",
+                  "method.response.header.Access-Control-Allow-Origin": "'*'"
+                },
+                "responseTemplates": { "application/json": "{}\n" }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Default response for CORS method",
+              "headers": {
+                "Access-Control-Allow-Headers": { "type": "string" },
+                "Access-Control-Allow-Methods": { "type": "string" },
+                "Access-Control-Allow-Origin": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    /* ... */
+  }
+  /* ... */
+}
+```
+
+The `paths` key has been added in the `0.2.0` version of `apex-api-gateway` to set default methods to every resources matched by a regex. You can find more about it on the [`paths` section of the README](https://github.com/yorunohikage/apex-api-gateway#paths). This way, we add an `OPTIONS` request to every resources we want to be available in the browser. The regex is set to match everything, but you could only allow one part of your API, very flexible this way.
+
+Now that we have defined our preflight requests, we have to add the same headers to all the responses we want. And for now, we do it in `swagger-func-template`, the behavior of this key is very similar to `paths` except you don't match paths and methods. In the future, it would likely be merged in `paths` property with a similar behavior for methods.
+
+```js
+"swagger-func-template": {
+  /* ... */
+  "responses": {
+    "200": {
+      /* ... */
+      "headers": {
+        "Access-Control-Allow-Headers": { "type": "string" },
+        "Access-Control-Allow-Methods": { "type": "string" },
+        "Access-Control-Allow-Origin": { "type": "string" }
+      }
+    },
+    /* ... */
+  },
+  "x-amazon-apigateway-integration": {
+    "responses": {
+      "default": {
+        "statusCode": "200",
+        "responseParameters": {
+          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+          "method.response.header.Access-Control-Allow-Methods": "'GET, PUT, POST, DELETE'",
+          "method.response.header.Access-Control-Allow-Origin": "'*'"
+        }
+      },
+      /* ... */
+    },
+    /* ... */
+  },
+  /* ... */
+}
+```
+
+And that's it, now you still can override per method your configuration if you need to.
 
 ## Conclusion
 
