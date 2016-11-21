@@ -15,4 +15,6 @@ lastfm = "http://last.fm/user/YoruNoHikage"
 steam = "http://steamcommunity.com/id/yorunohikage/"
 email = "yorunohikage@gmail.com"
 
+googleAnalyticsId = "UA-49971705-2"
+
 linkPrefix = "/"

@@ -7,8 +7,9 @@ import './style.css'
 
 class ReadNext extends React.Component {
   render () {
-    const { pages, post } = this.props
-    const { readNext } = post
+    const {post} = this.props
+    const {pages} = this.props.route
+    const {readNext} = post
 
     let nextPost
     if (readNext) {

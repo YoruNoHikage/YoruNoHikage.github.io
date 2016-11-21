@@ -1,5 +1,7 @@
-import ReactGA from 'react-ga';
-ReactGA.initialize('UA-49971705-2');
+import ReactGA from 'react-ga'
+import {config} from 'config'
+
+ReactGA.initialize(config.googleAnalyticsId);
 
 exports.onRouteUpdate = (state, page, pages) => {
   ReactGA.pageview(state.pathname);
