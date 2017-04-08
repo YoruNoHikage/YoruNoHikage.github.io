@@ -1,3 +1,12 @@
+a {
+	color: #222;
+}
+
+a:hover,
+a:focus {
+	color: #222;
+}
+
 .wrapper {
 	lost-center: 1070px;
 }

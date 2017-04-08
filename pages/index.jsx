@@ -1,13 +1,12 @@
-import React from 'react'
-import { Link } from 'react-router'
-import sortBy from 'lodash/sortBy'
-import moment from 'moment'
-import DocumentTitle from 'react-document-title'
-import { prefixLink } from 'gatsby-helpers'
-import access from 'safe-access'
-import { config } from 'config'
-import SitePost from '../components/SitePost'
-import SiteSidebar from '../components/SiteSidebar'
+import React from 'react';
+import { Link } from 'react-router';
+import sortBy from 'lodash/sortBy';
+import moment from 'moment';
+import Helmet from 'react-helmet';
+import { prefixLink } from 'gatsby-helpers';
+import access from 'safe-access';
+import { config } from 'config';
+import SiteSidebar from '../components/SiteSidebar';
 
 class SiteIndex extends React.Component {
   render() {
@@ -24,23 +23,23 @@ class SiteIndex extends React.Component {
       const categories = access(page, 'data.categories') || [];
       category && categories.push(category);
 
-      if(i > 5) {
+      if (i > 5) {
         return (
-          <div className='blog-post' style={{
+          <div className="blog-post" style={{
             margin: '0',
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
           }}>
-            <time dateTime={ moment(datePublished).format('MMMM D, YYYY') }>
-              { moment(datePublished).format('MMMM YYYY') }
+            <time dateTime={moment(datePublished).format('MMMM D, YYYY')}>
+              {moment(datePublished).format('MMMM YYYY')}
             </time>
             <h2 style={{
               display: 'inline',
               fontSize: '16px',
               marginLeft: '5px',
             }}>
-              <Link style={{ borderBottom: 'none' }} to={ prefixLink(page.path) } > { title } </Link>
+              <Link style={{ borderBottom: 'none' }} to={prefixLink(page.path)}>{title}</Link>
             </h2>
           </div>
         );
@@ -48,43 +47,42 @@ class SiteIndex extends React.Component {
 
       // Fix paths for images, videos... relative to blog post
       const bodyWithFixedPaths = body.replace(/<[^>]+src="(.+)"[^>]*>/g, (match, g1) => {
-        if(g1.startsWith('http')) {
+        if (g1.startsWith('http')) {
           return match;
         }
         return match.replace(g1, page.path + g1)
-      })
+      });
 
       return (
-          <div className='blog-post'>
-            <time dateTime={ moment(datePublished).format('MMMM D, YYYY') }>
-              { moment(datePublished).format('MMMM YYYY') }
-            </time>
-            <ul style={{display: 'inline-block', margin: '0', padding: '0'}}>{categories.map(category => <li className='blog-category'>{category}</li>)}</ul>
-            <h2><Link to={ prefixLink(page.path) } > { title } </Link></h2>
-            <div dangerouslySetInnerHTML={{ __html: bodyWithFixedPaths }} />
-          </div>
+        <div className="blog-post" key={title}>
+          <time dateTime={moment(datePublished).format('MMMM D, YYYY')}>
+            {moment(datePublished).format('MMMM YYYY')}
+          </time>
+          <ul style={{display: 'inline-block', margin: '0', padding: '0'}}>{categories.map(category => <li className='blog-category'>{category}</li>)}</ul>
+          <h2><Link to={prefixLink(page.path)}>{title}</Link></h2>
+          <div dangerouslySetInnerHTML={{ __html: bodyWithFixedPaths }} />
+        </div>
       );
     });
 
     return (
-      <DocumentTitle title={config.siteTitle}>
-        <div>
-          <SiteSidebar {...this.props}/>
-          <div className='content'>
-            <div className='main'>
-              <div className='main-inner'>
-                {formattedArticles}
-              </div>
+      <div>
+        <Helmet title={config.siteTitle} />
+        <SiteSidebar {...this.props} />
+        <div className="content">
+          <div className="main">
+            <div className="main-inner">
+              {formattedArticles}
             </div>
           </div>
         </div>
-      </DocumentTitle>
-    )
+      </div>
+    );
   }
 }
 
 SiteIndex.propTypes = {
   route: React.PropTypes.object,
-}
+};
 
-export default SiteIndex
+export default SiteIndex;

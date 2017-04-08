@@ -15,7 +15,7 @@
 	line-height: 30px;
 	margin-bottom: 20px;
 }
-.blog-post p {
+.blog-post p, .blog-post ul, .blog-post ol, .blog-post pre {
 	font-size: 16px;
 	line-height: 26px;
 	margin-bottom: 26px;
