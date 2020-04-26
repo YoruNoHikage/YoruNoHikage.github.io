@@ -28,7 +28,8 @@ This is the entities reducer. It takes all the actions and merge the normalizrâ€
 
 Here comes the problem : letâ€™s say we have two **entities**, **tweet** and **user** for example. A user can _like/unlike_ (yes, goodbye favorite) a tweet. These _actions_, I omit the request/response/normalizing process, will then be dispatched like this :
 
-```js{
+```js
+{
   type: 'LIKE_TWEET',
   response: {
     entities: {

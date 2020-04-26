@@ -1,33 +1,36 @@
-import React, { Component } from 'react';
-import { prefixLink } from 'gatsby-helpers';
-import markdown from 'markdown-it';
+import React from 'react';
+import { Remarkable } from 'remarkable';
 
-export default class AuthorCard extends Component {
-  render() {
-    const { name, username, avatar, twitterLink, children } = this.props;
+const md = new Remarkable();
 
-    return (
-      <div style={{ display: 'flex' }}>
-        <img
-          style={{ margin: '20px' }}
-          src={prefixLink(avatar)}
-          width="75"
-          height="75"
-          alt={username}
+export default function AuthorCard({
+  name,
+  username,
+  avatar,
+  twitterLink,
+  children,
+}) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <img
+        style={{ marginRight: '20px' }}
+        src={avatar}
+        width="75"
+        height="75"
+        alt={username}
+      />
+      <div>
+        <strong>{name}</strong> - @
+        <a href={twitterLink} title={`${username} on Twitter`}>
+          {username}
+        </a>
+        <p
+          style={{ margin: '0' }}
+          dangerouslySetInnerHTML={{
+            __html: md.render(children).match(/<p>([^]+)<\/p>/)[1],
+          }}
         />
-        <div style={{ flex: '1' }}>
-          <strong>{name}</strong>
-          {' '}
-          - @
-          <a href={twitterLink} title={`${username} on Twitter`}>{username}</a>
-          <p
-            style={{ margin: '0' }}
-            dangerouslySetInnerHTML={{
-              __html: markdown().render(children).match(/<p>([^]+)<\/p>/)[1],
-            }}
-          />
-        </div>
       </div>
-    );
-  }
+    </div>
+  );
 }

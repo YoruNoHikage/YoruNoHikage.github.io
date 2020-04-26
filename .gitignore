@@ -1,11 +1,8 @@
 node_modules/
 npm-debug.log
+yarn-error.log
 
 .eslintcache
+.next
 
-public
-
-.gatsby-context.js
-pages/.manifest
-.idea
-gatsby-starter-lumen.iml
+out/

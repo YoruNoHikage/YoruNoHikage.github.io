@@ -1,88 +1,116 @@
 import React from 'react';
-import { Link } from 'react-router';
-import sortBy from 'lodash/sortBy';
+import glob from 'glob';
 import moment from 'moment';
-import Helmet from 'react-helmet';
-import { prefixLink } from 'gatsby-helpers';
-import access from 'safe-access';
-import { config } from 'config';
-import SiteSidebar from '../components/SiteSidebar';
 
-class SiteIndex extends React.Component {
-  render() {
-    const { pages } = this.props.route;
+import Sidebar from '../components/Sidebar';
+import Link from 'next/link';
 
-    const articles = pages.filter(page => access(page, 'file.ext') === 'md' && access(page, 'data.layout') === 'post');
-    const sortedArticles = sortBy(articles, (article) => access(article, 'data.date')).reverse();
+export default function Home({ articles }) {
+  const sortedArticles = [...articles];
 
-    const formattedArticles = sortedArticles.map((page, i) => {
-      const title = access(page, 'data.title') || page.path;
-      const body = access(page, 'data.body');
-      const datePublished = access(page, 'data.date');
-      const category = access(page, 'data.category');
-      const categories = access(page, 'data.categories') || [];
-      category && categories.push(category);
+  sortedArticles.reverse();
+  // sortedArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-      if (i > 5) {
-        return (
-          <div className="blog-post" style={{
+  const formattedArticles = sortedArticles.map((article, i) => {
+    const {
+      title,
+      content,
+      date: datePublished,
+      category,
+      categories = [],
+      slug,
+    } = article;
+
+    category && categories.push(category);
+
+    if (i > 5) {
+      return (
+        <div
+          key={slug}
+          className="blog-post"
+          style={{
             margin: '0',
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
-          }}>
-            <time dateTime={moment(datePublished).format('MMMM D, YYYY')}>
-              {moment(datePublished).format('MMMM YYYY')}
-            </time>
-            <h2 style={{
-              display: 'inline',
-              fontSize: '16px',
-              marginLeft: '5px',
-            }}>
-              <Link style={{ borderBottom: 'none' }} to={prefixLink(page.path)}>{title}</Link>
-            </h2>
-          </div>
-        );
-      }
-
-      // Fix paths for images, videos... relative to blog post
-      const bodyWithFixedPaths = body.replace(/<[^>]+src="(.+)"[^>]*>/g, (match, g1) => {
-        if (g1.startsWith('http')) {
-          return match;
-        }
-        return match.replace(g1, page.path + g1)
-      });
-
-      return (
-        <div className="blog-post" key={title}>
+          }}
+        >
           <time dateTime={moment(datePublished).format('MMMM D, YYYY')}>
             {moment(datePublished).format('MMMM YYYY')}
           </time>
-          <ul style={{display: 'inline-block', margin: '0', padding: '0'}}>{categories.map(category => <li className='blog-category'>{category}</li>)}</ul>
-          <h2><Link to={prefixLink(page.path)}>{title}</Link></h2>
-          <div dangerouslySetInnerHTML={{ __html: bodyWithFixedPaths }} />
+          <h2
+            style={{
+              display: 'inline',
+              fontSize: '16px',
+              marginLeft: '5px',
+            }}
+          >
+            <Link href={slug}>
+              <a style={{ borderBottom: 'none' }}>{title}</a>
+            </Link>
+          </h2>
         </div>
       );
-    });
+    }
 
     return (
+      <div className="blog-post" key={slug}>
+        <time dateTime={moment(datePublished).format('MMMM D, YYYY')}>
+          {moment(datePublished).format('MMMM YYYY')}
+        </time>
+        <ul style={{ display: 'inline-block', margin: '0', padding: '0' }}>
+          {categories.map((category) => (
+            <li key={category} className="blog-category">{category}</li>
+          ))}
+        </ul>
+        <h2>
+          <Link href={slug}>
+            <a>{title}</a>
+          </Link>
+        </h2>
+        <div dangerouslySetInnerHTML={{ __html: content }} />
+      </div>
+    );
+  });
+
+  return (
+    <div className="wrapper">
       <div>
-        <Helmet title={config.siteTitle} />
-        <SiteSidebar {...this.props} />
+        <Sidebar />
         <div className="content">
           <div className="main">
-            <div className="main-inner">
-              {formattedArticles}
-            </div>
+            <div className="main-inner">{formattedArticles}</div>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
-SiteIndex.propTypes = {
-  route: React.PropTypes.object,
-};
+export async function getStaticProps() {
+  const articlesPaths = glob.sync('articles/**/*.md');
 
-export default SiteIndex;
+  const articles = await Promise.all(
+    articlesPaths.map(async (path) => {
+      const folder = path.split('/')[1];
+      const splits = folder.match(/(\d{4})-(\d{2})-(\d{2})-(.+)/);
+      const slug = splits ? splits.slice(1).join('/') : folder;
+
+      const { content, data } = await import(
+        '../articles/' + folder + '/index.md'
+      );
+
+      return {
+        ...data,
+        slug,
+        content,
+      };
+    })
+  );
+
+  return {
+    props: {
+      articles,
+    },
+  };
+}

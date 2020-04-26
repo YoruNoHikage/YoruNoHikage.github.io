@@ -11,7 +11,7 @@ categories:
   - Events
   - Projects
 ---
-![Global Game Jam Rennes 2015 - Jardin Moderne](global-game-jam-2015.jpg)
+![Global Game Jam Rennes 2015 - Jardin Moderne](global-game-jam-rennes-2015.jpg)
 
 _Du 23 au 25 janvier dernier, c’était la Global Game Jam, **28 837 participants** et plus de **5438 jeux** créés dans 518 endroits dispersés entre 78 pays ! L’ouest de la France était un peu plus représenté cette année avec Nantes et Le Mans qui ont rejoint la partie. **Retour d’expérience pour ma 3ème année consécutive à Rennes.**_
 
