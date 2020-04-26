@@ -1,10 +1,15 @@
 import React from 'react';
+import Head from 'next/head';
 
 import Sidebar from '../components/Sidebar';
 
 export default function About() {
   return (
     <div className="wrapper">
+      <Head>
+        <title>About - YoruNoHikage</title>
+      </Head>
+
       <div>
         <Sidebar />
         <div className="content">
