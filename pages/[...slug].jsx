@@ -1,5 +1,6 @@
 import React from 'react';
 import glob from 'glob';
+import Head from 'next/head';
 import Link from 'next/link';
 import moment from 'moment';
 
@@ -16,6 +17,10 @@ export default function Article({ title, date, content }) {
 
   return (
     <div className="wrapper">
+      <Head>
+        <title>{title} - YoruNoHikage</title>
+      </Head>
+
       <div>
         <div>
           <Link href="/">

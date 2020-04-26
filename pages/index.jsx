@@ -1,9 +1,10 @@
 import React from 'react';
 import glob from 'glob';
 import moment from 'moment';
+import Head from 'next/head';
+import Link from 'next/link';
 
 import Sidebar from '../components/Sidebar';
-import Link from 'next/link';
 
 export default function Home({ articles }) {
   const sortedArticles = [...articles];
@@ -45,7 +46,7 @@ export default function Home({ articles }) {
               marginLeft: '5px',
             }}
           >
-            <Link href={slug}>
+            <Link href="/[...slug]" as={'/' + slug}>
               <a style={{ borderBottom: 'none' }}>{title}</a>
             </Link>
           </h2>
@@ -64,7 +65,7 @@ export default function Home({ articles }) {
           ))}
         </ul>
         <h2>
-          <Link href={slug}>
+          <Link href="/[...slug]" as={'/' + slug}>
             <a>{title}</a>
           </Link>
         </h2>
@@ -75,6 +76,10 @@ export default function Home({ articles }) {
 
   return (
     <div className="wrapper">
+      <Head>
+        <title>YoruNoHikage's blog</title>
+      </Head>
+
       <div>
         <Sidebar />
         <div className="content">
