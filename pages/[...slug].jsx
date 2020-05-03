@@ -3,6 +3,7 @@ import glob from 'glob';
 import Head from 'next/head';
 import Link from 'next/link';
 import moment from 'moment';
+import { useRouter } from 'next/router';
 
 import AuthorCard from '../components/AuthorCard';
 import avatar from '../images/yorunohikage.png';
@@ -14,13 +15,26 @@ export default function Article({
   content,
   lang,
   otherLangs,
+  redirectToLang,
 }) {
+  const { push } = useRouter();
+
   const dateStyle = {
     textAlign: 'center',
     display: 'block',
     color: 'grey',
     marginBottom: '50px',
   };
+
+  if (redirectToLang) {
+    if (typeof window !== 'undefined') push(`/${redirectToLang}/${path}`);
+
+    return (
+      <Head>
+        <meta httpEquiv="refresh" href={`0;url=/${redirectToLang}/${path}`} />
+      </Head>
+    );
+  }
 
   return (
     <div>
@@ -31,7 +45,7 @@ export default function Article({
           [lang, ...otherLangs].map((l) => (
             <link
               rel="alternate"
-              hreflang={l}
+              hrefLang={l}
               href={'/' + (l !== 'en' ? l + '/' : '') + path}
             />
           ))}
@@ -94,10 +108,19 @@ export async function getStaticProps({ params }) {
     path = slug.slice(1).join('/');
   }
 
-  const articlesPaths = glob.sync(`articles/${articleSlug}/index*.md`);
-  const otherLangs = articlesPaths
+  const articles = glob.sync('index*.md', {
+    cwd: `articles/${articleSlug}/`,
+  });
+
+  // redirect
+  if (lang === 'en' && !articles.includes('index.md')) {
+    const redirectToLang = articles[0].match(/index\.(.+)\.md/)[1];
+    return { props: { redirectToLang, path } };
+  }
+
+  const otherLangs = articles
     .map((path) =>
-      path.includes('index.md') ? 'en' : path.match(/.*index\.(.+)\.md/)[1]
+      path.includes('index.md') ? 'en' : path.match(/index\.(.+)\.md/)[1]
     )
     .filter((otherLang) => otherLang !== lang);
 
@@ -124,28 +147,37 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const articles = glob.sync('articles/**/index*.md');
+  const folders = glob.sync('articles/*/');
+  const slugs = [];
 
-  const splittedSlugs = articles.map((file) => {
-    const splittedPath = file.split('/');
-    const slug = splittedPath[1];
-    const filename = splittedPath[splittedPath.length - 1];
+  for (let folderPath of folders) {
+    const dirName = folderPath.split('/')[1];
 
     // removing the full match
-    const splits = slug.match(/(\d{4})-(\d{2})-(\d{2})-(.+)/);
-
+    const splits = dirName.match(/(\d{4})-(\d{2})-(\d{2})-(.+)/);
     const arraySlug = splits ? splits.slice(1) : [slug];
 
-    // if it's not default lang
-    if (!filename.includes('index.md')) {
-      arraySlug.unshift(filename.match(/.*index\.(.+)\.md/)[1]);
+    // finding languages
+    const articles = glob.sync('index*.md', { cwd: folderPath });
+
+    if (articles.length === 0) continue;
+
+    // pushing default lang path
+    slugs.push(arraySlug);
+
+    if (articles.includes('index.md')) {
+      articles.splice(articles.indexOf('index.md'), 1);
     }
 
-    return arraySlug;
-  });
+    for (let article of articles) {
+      const lang = article.match(/.*index\.(.+)\.md/)[1];
+
+      slugs.push([lang, ...arraySlug]);
+    }
+  }
 
   return {
-    paths: splittedSlugs.map((slug) => ({
+    paths: slugs.map((slug) => ({
       params: { slug },
     })),
     fallback: false,

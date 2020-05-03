@@ -20,6 +20,8 @@ export default function Home({ articles }) {
       category,
       categories = [],
       slug,
+      lang,
+      otherLangs,
     } = article;
 
     category && categories.push(category);
@@ -39,6 +41,22 @@ export default function Home({ articles }) {
           <time dateTime={moment(datePublished).format('MMMM D, YYYY')}>
             {moment(datePublished).format('MMMM YYYY')}
           </time>
+          <ul
+            style={{
+              padding: '0',
+              margin: '0',
+              listStyle: 'none',
+              float: 'right',
+            }}
+          >
+            {otherLangs.map((l) => (
+              <li key={l} style={{ display: 'inline', margin: '0 5px' }}>
+                <Link href="/[...slug]" as={`/${l}/${slug}`}>
+                  <a hrefLang={l}>[{l}]</a>
+                </Link>
+              </li>
+            ))}
+          </ul>
           <h2
             style={{
               display: 'inline',
@@ -46,8 +64,14 @@ export default function Home({ articles }) {
               marginLeft: '5px',
             }}
           >
-            <Link href="/[...slug]" as={'/' + slug}>
-              <a style={{ borderBottom: 'none' }}>{title}</a>
+            <Link
+              href="/[...slug]"
+              as={'/' + (lang === 'en' ? '' : lang + '/') + slug}
+            >
+              <a style={{ borderBottom: 'none' }}>
+                {lang !== 'en' && `[${lang}] `}
+                {title}
+              </a>
             </Link>
           </h2>
         </div>
@@ -61,7 +85,25 @@ export default function Home({ articles }) {
         </time>
         <ul style={{ display: 'inline-block', margin: '0', padding: '0' }}>
           {categories.map((category) => (
-            <li key={category} className="blog-category">{category}</li>
+            <li key={category} className="blog-category">
+              {category}
+            </li>
+          ))}
+        </ul>
+        <ul
+          style={{
+            padding: '0',
+            margin: '5px 0',
+            listStyle: 'none',
+            float: 'right',
+          }}
+        >
+          {otherLangs.map((l) => (
+            <li key={l} style={{ display: 'inline', margin: '0 5px' }}>
+              <Link href="/[...slug]" as={`/${l}/${slug}`}>
+                <a hrefLang={l}>[{l}]</a>
+              </Link>
+            </li>
           ))}
         </ul>
         <h2>
@@ -93,25 +135,53 @@ export default function Home({ articles }) {
 }
 
 export async function getStaticProps() {
-  const articlesPaths = glob.sync('articles/**/*.md');
+  const folders = glob.sync('articles/*/');
+  const articles = [];
 
-  const articles = await Promise.all(
-    articlesPaths.map(async (path) => {
-      const folder = path.split('/')[1];
-      const splits = folder.match(/(\d{4})-(\d{2})-(\d{2})-(.+)/);
-      const slug = splits ? splits.slice(1).join('/') : folder;
+  for (let folderPath of folders) {
+    const dirName = folderPath.split('/')[1];
 
-      const { content, data } = await import(
-        '../articles/' + folder + '/index.md'
-      );
+    // removing the full match
+    const splits = dirName.match(/(\d{4})-(\d{2})-(\d{2})-(.+)/);
+    const slug = splits ? splits.slice(1).join('/') : folder;
 
-      return {
-        ...data,
-        slug,
-        content,
-      };
-    })
-  );
+    // finding languages
+    const articlesPaths = glob.sync('index*.md', { cwd: folderPath });
+
+    if (articlesPaths.length === 0) continue;
+
+    let filename = 'index.md';
+    let lang = 'en';
+
+    if (articlesPaths.includes('index.md')) {
+      articlesPaths.splice(articlesPaths.indexOf('index.md'), 1);
+    } else {
+      filename = articlesPaths[0];
+      lang = filename.match(/.*index\.(.+)\.md/)[1];
+      articlesPaths.pop();
+    }
+
+    let data, content;
+
+    try {
+      ({ data, content } = await import(`../articles/${dirName}/${filename}`));
+    } catch (err) {
+      console.log('Error when importing article', err);
+      continue;
+    }
+
+    const otherLangs = articlesPaths.map(
+      (article) => article.match(/.*index\.(.+)\.md/)[1]
+    );
+
+    articles.push({
+      ...data,
+      slug,
+      content,
+      lang,
+      otherLangs,
+    });
+  }
 
   return {
     props: {
