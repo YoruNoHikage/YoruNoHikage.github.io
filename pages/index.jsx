@@ -26,7 +26,7 @@ export default function Home({ articles }) {
 
     category && categories.push(category);
 
-    if (i > 5) {
+    if (i >= 5) {
       return (
         <div
           key={slug}
