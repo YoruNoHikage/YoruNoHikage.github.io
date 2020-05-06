@@ -1,6 +1,6 @@
 ---
 title: 'From Gatsby to Next but still static'
-date: '2020-06-05T16:36:00.000Z'
+date: '2020-05-06T16:36:00.000Z'
 categories:
   - Development
 ---
