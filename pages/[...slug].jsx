@@ -17,7 +17,7 @@ export default function Article({
   otherLangs,
   redirectToLang,
 }) {
-  const { push } = useRouter();
+  const { replace } = useRouter();
 
   const dateStyle = {
     textAlign: 'center',
@@ -27,7 +27,7 @@ export default function Article({
   };
 
   if (redirectToLang) {
-    if (typeof window !== 'undefined') push(`/${redirectToLang}/${path}`);
+    if (typeof window !== 'undefined') replace(`/${redirectToLang}/${path}`);
 
     return (
       <Head>
