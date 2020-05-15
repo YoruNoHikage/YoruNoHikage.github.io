@@ -74,7 +74,7 @@ export default function Article({
               <Link
                 href="/[...slug]"
                 as={'/' + (l !== 'en' ? l + '/' : '') + path}
-                hreflang={l}
+                hrefLang={l}
               >
                 <a>{l}</a>
               </Link>
