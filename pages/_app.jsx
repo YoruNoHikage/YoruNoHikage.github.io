@@ -1,5 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
+import Router from 'next/router';
+
+import * as gtag from '../lib/gtag';
 
 import '../styles/reset.css';
 import '../styles/typography.css';
@@ -10,6 +13,8 @@ import '../styles/blog-post.css';
 import '../components/Sidebar/style.css';
 import '../components/Nav/style.css';
 import '../components/SiteLinks/style.css';
+
+Router.events.on('routeChangeComplete', (url) => gtag.pageview(url));
 
 export default function App({ Component, pageProps }) {
   return (
