@@ -2,11 +2,13 @@ import React from 'react';
 import glob from 'glob';
 import Head from 'next/head';
 import Link from 'next/link';
-import moment from 'moment';
 import { useRouter } from 'next/router';
 
 import AuthorCard from '../components/AuthorCard';
 import avatar from '../images/yorunohikage.png';
+
+const getAbsoluteURL = (lang, path) =>
+  `https://blog.yorunohikage.fr/${lang !== 'en' ? lang + '/' : ''}${path}`;
 
 export default function Article({
   title,
@@ -43,12 +45,22 @@ export default function Article({
 
         {otherLangs.length > 0 &&
           [lang, ...otherLangs].map((l) => (
-            <link
-              rel="alternate"
-              hrefLang={l}
-              href={'/' + (l !== 'en' ? l + '/' : '') + path}
-            />
+            <link rel="alternate" hrefLang={l} href={getAbsoluteURL(l, path)} />
           ))}
+
+        <meta property="og:locale" content={getAbsoluteURL(lang, path)} />
+        {otherLangs.map((l) => (
+          <meta
+            property="og:locale:alternate"
+            content={getAbsoluteURL(l, path)}
+          />
+        ))}
+
+        <meta property="og:title" content={title} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={getAbsoluteURL(lang, path)} />
+
+        <meta name="twitter:card" content="summary" />
       </Head>
 
       <div className="top-links">
@@ -75,7 +87,13 @@ export default function Article({
         <div className="text" lang={lang}>
           <h1>{title}</h1>
           <em style={dateStyle}>
-            <time dateTime={date}>{moment(date).format('D MMMM YYYY')}</time>
+            <time dateTime={date}>
+              {new Date(date).toLocaleDateString(lang, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </time>
           </em>
           <div dangerouslySetInnerHTML={{ __html: content }} />
         </div>

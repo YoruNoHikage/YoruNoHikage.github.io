@@ -55,6 +55,9 @@ export default function App({ Component, pageProps }) {
           rel="stylesheet"
           type="text/css"
         />
+
+        <meta property="og:site_name" content="YoruNoHikage's Blog" />
+        <meta name="twitter:creator" content="@yorunohikage" />
       </Head>
 
       <Component {...pageProps} />
