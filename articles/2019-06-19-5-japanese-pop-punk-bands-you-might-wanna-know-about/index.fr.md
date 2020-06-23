@@ -1,0 +1,48 @@
+---
+title: "5 groupes japonais de pop / punk dont vous voulez probablement entendre parler"
+date: "2020-06-23T12:49:00.000Z"
+layout: post
+categories:
+- Music
+---
+Il y a 3 ans maintenant, j'ai écris [un article de blog en anglais à propos de 5 groupes français de pop / punk bands dont vous voulez probablement entendre parler](/2017/03/08/5-french-pop-punk-bands-you-might-wanna-know-about) et aussi fou que cela puisse paraître, ça a été et est toujours l'un de mes articles les plus consultés sur mon blog. Comme mon intérêt pour le punk et compagnie a grandit, je voulais partager plus de groupes que j'ai pu découvrir mais venant du Japon ce coup-ci. J'ai donc écris un article sur le sujet l'année dernière et décidé de le traduire depuis que mon blog est multilingue.
+Contrairement à la France qui possède nombreux groupes de hardcore ou d'indie-psych-post-proto-experimental (pour caricaturer), le Japon semble avoir une énorme scène indépendante de pop basique qui correspond parfaitement à mes goûts.
+
+## [SpecialThanks](https://open.spotify.com/artist/1ZzoJJ9wVpdlxB8Hp96ENk)
+
+**Pop punk de Nagoya. Formé en 2005. Abrégé en スぺサン (SupeSan).**  
+Groupe énergique et très catchy mené par la guitariste et (talentueuse) vocaliste Misaki depuis le début. Elle est actuellement la seule membre fondatrice originale et a récemment recruté des nouveaux membres avec lesquels elle a sorti un album, [SUNCTUARY](https://open.spotify.com/album/2huhdNL3TBJ4n6v71th1nZ) dont un titre a été utilisé pour un générique de j-drama. Espérons que cette formation tienne dans le temps, leur musique est tellement bien que ça serait dommage de ne pas en avoir plus. La chanteuse avait pour habitude d'écrire exclusivement en anglais de part ses inspirations mais les derniers albums tendent à renverser la tendance (ou à équilibrer) avec du japonais.
+
+<iframe style="display: block; margin: auto;" width="560" height="315" src="https://www.youtube.com/embed/b34cRpu1NIM" frameborder="0" allowfullscreen></iframe>
+
+## [Yabai T-shirts Yasan (ヤバイTシャツ屋さん)](https://open.spotify.com/artist/3GP0RQRnBvpYVgdVYfcaGS)
+
+**Pop punk / Hardcore mélodique d'Osaka. Formé en 2012. Abrégé en ヤバT (YabaT).**  
+
+"Groupe de 3 filles de technopop addressée aux femmes de 50 ans" selon le site web du groupe. En réalité, ce groupe déjanté est plein d'humour. Rien que par le nom qui pourrait être traduit par Magasin de T-shirts de Ouf. Leurs paroles dépictent souvent des situations délirantes avec abondance de jeux de mots pourris. Un bon exemple de ce groupe est le titre Happy Wedding Mae Song qui souhaite des voeux de bonheur à un couple se pressant de se marrier mais en avertissant qu'ils vont "probablement se séparer et divorcer dans les 2 prochaines années, mais bon mariage quand même". Ils chantent principalement en japonais.
+
+<iframe style="display: block; margin: auto;" width="560" height="315" src="https://www.youtube.com/embed/lVIHyj9qVy0" frameborder="0" allowfullscreen></iframe>
+
+## [LONGMAN](https://longman.jp/)
+
+**Punk mélodique d'Ehime. Formé en 2012.**  
+
+Parfois émotionnel mais souvent rapide et très mélodique, ils ont aussi une particularité d'utiliser des riffs et des sons ska pour le meilleur. Quand je les ai découvert, ils ne faisaient pas énormément parler d'eux et leurs vues sur YouTube se comptaient en quelques milliers mais ils ont grimpé rapidement. L'année dernière, je les qualifiais pas encore de mainstream mais après leurs signatures chez SONY Music et un générique de Boruto, ils s'en approchent. Ils chantent à la fois en anglais et en japonais, souvent mélangés au sein d'une même chanson.
+
+<iframe style="display: block; margin: auto;" width="560" height="315" src="https://www.youtube.com/embed/W0Xfg1xvP2I" frameborder="0" allowfullscreen></iframe>
+
+## [ELLEGARDEN](https://open.spotify.com/artist/3cbd5GWGOknxmFAe77MDbk)
+
+**Pop punk de Chiba. Formé en 1998. Abrégé en エルレ (Erure).**   
+
+Si vous écoutez leurs chansons en anglais, vous pourriez penser qu'il s'agit d'un groupe américain tant leur son et la façon de parler se rapproche d'un groupe californien. Ayant passé plusieurs années en tant que développeur en Californie, le chanteur a eu le temps de maîtriser une prononciation quasi-parfaite avant de revenir au Japon pour créer son groupe qui a cartonné. Ils sont très proches de groupes comme Simple Plan ou Weezer. En 2008, se sentant tourner en rond, ils se sont mis en pause pour se concentrer sur d'autres projets mais se sont retrouvés et on décidé de se reformer 10 ans après. Actuellement, aucun nouveau titre ni album n'est prévu mais ils sont souvent en tête d'affiches de certains festivals. Il n'y a plus qu'à espérer.
+
+<iframe style="display: block; margin: auto;" width="560" height="315" src="https://www.youtube.com/embed/qLFQ5Y8t2iE" frameborder="0" allowfullscreen></iframe>
+
+## [Hi-STANDARD](https://open.spotify.com/artist/7hTZwqQILVH4bAbN67CeEz)
+
+**Punk / Hardcore d'Osaka. Formé en 1991. Abrégé en ハイスタ.**  
+
+Penchant parfois vers le hardcore, mais tout le temps punk et définitivement plus pop maintenant, il s'agit d'un vieux groupe mais qui mérite de lui porter attention. Proches de NOFX et Fat Wreck Chords, ils ont été édités aux USA au moment de l'explosion de la vague pop punk des années 90 mais ont par la suite formé leur propre label au Japon, Pizza of Death. Leur dernier album sorti comprend le titre éponyme "The Gift", une chanson qu'ils ont d'abord fait imprimer sous forme de partition sur un mur dans la gare de Shibuya à Tokyo avant de sortir le single sur YouTube, demandant aux fans de la jouer avant le groupe. Ils chantent principalement en anglais.
+
+<iframe style="display: block; margin: auto;" width="560" height="315" src="https://www.youtube.com/embed/RnYSAWMOK-Y" frameborder="0" allowfullscreen></iframe>
