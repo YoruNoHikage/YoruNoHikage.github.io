@@ -1,6 +1,5 @@
 import React from 'react';
 import glob from 'glob';
-import moment from 'moment';
 import Head from 'next/head';
 import Link from 'next/link';
 
@@ -38,8 +37,11 @@ export default function Home({ articles }) {
             textOverflow: 'ellipsis',
           }}
         >
-          <time dateTime={moment(datePublished).format('MMMM D, YYYY')}>
-            {moment(datePublished).format('MMMM YYYY')}
+          <time dateTime={datePublished}>
+            {new Date(datePublished).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+            })}
           </time>
           <ul
             style={{
@@ -80,8 +82,11 @@ export default function Home({ articles }) {
 
     return (
       <div className="blog-post" key={slug}>
-        <time dateTime={moment(datePublished).format('MMMM D, YYYY')}>
-          {moment(datePublished).format('MMMM YYYY')}
+        <time dateTime={datePublished}>
+          {new Date(datePublished).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+          })}
         </time>
         <ul style={{ display: 'inline-block', margin: '0', padding: '0' }}>
           {categories.map((category) => (
