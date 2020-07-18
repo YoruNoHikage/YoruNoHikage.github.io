@@ -1,7 +1,6 @@
 module.exports = {
   plugins: {
     lost: {},
-    'rucksack-css': {},
     'postcss-flexbugs-fixes': {},
     'postcss-preset-env': {
       autoprefixer: {
