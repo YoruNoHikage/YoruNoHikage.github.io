@@ -1,0 +1,6 @@
+Sitemap: https://blog.yorunohikage.fr/sitemap.xml
+
+User-agent: *
+Allow: /*
+
+Disallow: /api/*
