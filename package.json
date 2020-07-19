@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build && yarn build:sitemap && next export",
-    "build:sitemap": "node ./.next/server/scripts/generate-sitemap.js"
+    "build:sitemap": "node ./.next/serverless/scripts/generate-sitemap.js"
   },
   "keywords": [
     "next",

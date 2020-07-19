@@ -25,6 +25,7 @@ module.exports = withOptimizedImages(
     pageExtensions: ['js', 'jsx', 'md'],
     exportTrailingSlash: true,
 
+    target: 'serverless',
     webpack(config, { dev, isServer }) {
       if (!dev && isServer) {
         const originalEntry = config.entry;
