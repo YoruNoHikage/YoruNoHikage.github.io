@@ -40,7 +40,9 @@
     "react-dom": "^16.13.1",
     "remarkable": "^2.0.0",
     "responsive-loader": "^1.2.0",
+    "sitemap": "^6.2.0",
     "svg-sprite-loader": "^5.0.0",
-    "webp-loader": "^0.6.0"
+    "webp-loader": "^0.6.0",
+    "zlib": "^1.0.5"
   }
 }
