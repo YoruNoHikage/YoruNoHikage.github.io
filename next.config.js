@@ -25,9 +25,19 @@ module.exports = withOptimizedImages(
     pageExtensions: ['js', 'jsx', 'md'],
     exportTrailingSlash: true,
 
-    webpack(config, { isServer }) {
-      if (isServer) {
-        require('./generate-sitemap');
+    webpack(config, { dev, isServer }) {
+      if (!dev && isServer) {
+        const originalEntry = config.entry;
+
+        config.entry = async () => {
+          const entries = { ...(await originalEntry()) };
+
+          // These scripts can import components from the app and use ES modules
+          entries['./scripts/generate-sitemap.js'] = './scripts/generate-sitemap.js';
+          // entries['./scripts/build-rss.js'] = './scripts/build-rss.js';
+
+          return entries;
+        };
       }
 
       return config;

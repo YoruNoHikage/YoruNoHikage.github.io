@@ -4,7 +4,8 @@
   "description": "YoruNoHikage's blog",
   "scripts": {
     "dev": "next",
-    "build": "next build && next export"
+    "build": "next build && yarn build:sitemap && next export",
+    "build:sitemap": "node ./.next/server/scripts/generate-sitemap.js"
   },
   "keywords": [
     "next",
