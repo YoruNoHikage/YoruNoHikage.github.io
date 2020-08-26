@@ -39,8 +39,10 @@ module.exports = function markdownLoader(content) {
 
   callback(
     null,
-    `module.exports = {content: ${
+    `const content = ${
       resolved.content.match(/(".+")/)[0]
-    }, data: ${JSON.stringify(resolved.data)}};`
+    }; export default content; export const data = ${JSON.stringify(
+      resolved.data
+    )};`
   );
 };

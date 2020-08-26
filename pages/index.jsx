@@ -4,6 +4,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 import Sidebar from '../components/Sidebar';
+import dynamic from 'next/dynamic';
+
+const componentList = {};
 
 export default function Home({ articles, featuredArticles }) {
   return (
@@ -25,9 +28,17 @@ export default function Home({ articles, featuredArticles }) {
                   category,
                   categories = [],
                   slug,
+                  folder,
                   lang,
                   otherLangs,
                 } = article;
+
+                let Content = () => null;
+
+                if (!content) {
+                  const filename = `index${lang === 'en' ? '' : '.' + lang}.mdx`;
+                  Content = (componentList[filename] && componentList[filename].default) || dynamic(() => import(`../articles/${folder}/index${lang === 'en' ? '' : '.' + lang}.mdx`));
+                }
 
                 return (
                   <div className="blog-post" key={slug}>
@@ -65,7 +76,7 @@ export default function Home({ articles, featuredArticles }) {
                         <a>{title}</a>
                       </Link>
                     </h2>
-                    <div lang={lang} dangerouslySetInnerHTML={{ __html: content }} />
+                    {content ? <div lang={lang} dangerouslySetInnerHTML={{ __html: content }} /> : <Content />}
                   </div>
                 );
               })}
@@ -164,39 +175,47 @@ export async function getStaticProps({ defaultLocale, locale }) {
     const slug = splits ? splits.slice(1).join('/') : folder;
 
     // finding languages
-    const articlesPaths = glob.sync('index*.md', { cwd: folderPath });
+    const articlesPaths = glob.sync('index*.+(md|mdx)', { cwd: folderPath });
 
     if (articlesPaths.length === 0) continue;
 
     let filename = 'index.md';
     let lang = 'en';
 
-    if (articlesPaths.includes('index.md')) {
+    if (articlesPaths.includes('index.mdx')) {
+      filename = 'index.mdx';
+      articlesPaths.splice(articlesPaths.indexOf('index.mdx'), 1);
+    } else if (articlesPaths.includes('index.md')) {
       articlesPaths.splice(articlesPaths.indexOf('index.md'), 1);
     } else {
       filename = articlesPaths[0];
-      lang = filename.match(/.*index\.(.+)\.md/)[1];
+      lang = filename.match(/.*index\.(.+)\.mdx?/)[1];
       articlesPaths.pop();
     }
 
     let data, content;
 
     try {
-      ({ data, content } = await import(`../articles/${dirName}/${filename}`));
+      const fileContent = await import(`../articles/${dirName}/${filename}`);
+
+      ({ data, default: content } = fileContent);
+
+      componentList[dirName] = fileContent;
     } catch (err) {
       console.log('Error when importing article', err);
       continue;
     }
 
     const otherLangs = articlesPaths.map(
-      (article) => article.match(/.*index\.(.+)\.md/)[1]
+      (article) => article.match(/.*index\.(.+)\.mdx?/)[1]
     );
 
     if (featuredArticles.length <= 5) {
       featuredArticles.push({
         ...data,
         slug,
-        content,
+        folder: dirName,
+        content: !filename.includes('.mdx') && content,
         lang,
         otherLangs,
       });

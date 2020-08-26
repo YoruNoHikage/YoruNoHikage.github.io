@@ -2,6 +2,7 @@ import React from 'react';
 import glob from 'glob';
 import Head from 'next/head';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
 import AuthorCard from '../components/AuthorCard';
@@ -9,11 +10,14 @@ import avatar from '../images/yorunohikage.png';
 
 const baseUrl = 'https://blog.yorunohikage.fr';
 
+const componentList = {};
+
 const getAbsoluteURL = (lang, path) =>
   `https://blog.yorunohikage.fr/${lang !== 'en' ? lang + '/' : ''}${path}`;
 
 export default function Article({
   title,
+  folder,
   path,
   date,
   ogImage,
@@ -41,6 +45,13 @@ export default function Article({
         <meta httpEquiv="refresh" href={`0;url=/${redirectToLang}/${path}`} />
       </Head>
     );
+  }
+
+  let Content = () => null;
+
+  if (!content) {
+    const filename = `index${lang === 'en' ? '' : '.' + lang}.mdx`;
+    Content = (componentList[filename] && componentList[filename].default) || dynamic(() => import(`../articles/${folder}/index${lang === 'en' ? '' : '.' + lang}.mdx`));
   }
 
   return (
@@ -104,7 +115,7 @@ export default function Article({
               })}
             </time>
           </em>
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+          {content ? <div dangerouslySetInnerHTML={{ __html: content }} /> : <Content />}
         </div>
         <hr />
         <div className="footer">
@@ -128,43 +139,53 @@ export async function getStaticProps({ defaultLocale, locale, params }) {
   let articleSlug = slug.join('-');
   let path = slug.join('/');
 
-  const articles = glob.sync('index*.md', {
+  const articles = glob.sync('index*.@(md|mdx)', {
     cwd: `articles/${articleSlug}/`,
   });
 
+  await Promise.all(articles.map(async (path) => {
+    componentList[path] = await import(`../articles/${articleSlug}/${path}`);
+    return componentList[path];
+  }));
+
   // redirect
-  if (locale === defaultLocale && !articles.includes('index.md')) {
-    const redirectToLang = articles[0].match(/index\.(.+)\.md/)[1];
+  if (locale === defaultLocale && !articles.includes('index.md') && !articles.includes('index.mdx')) {
+    const redirectToLang = articles[0].match(/index\.(.+)\.mdx?/)[1];
     return { props: { redirectToLang, path } };
   }
 
   const otherLangs = articles
     .map((path) =>
-      path.includes('index.md') ? defaultLocale : path.match(/index\.(.+)\.md/)[1]
+      path.includes('index.md') ? defaultLocale : path.match(/index\.(.+)\.mdx?/)[1]
     )
     .filter((otherLang) => otherLang !== locale);
 
+  const isMDX = articles.includes(`index${locale === 'en' ? '' : '.' + locale}.mdx`);
+
   try {
-    const { content, data } = await import(
-      `../articles/${articleSlug}/index${locale === defaultLocale ? '' : '.' + locale}.md`
+    const { default: content, data } = await import(
+      `../articles/${articleSlug}/index${locale === defaultLocale ? '' : '.' + locale}.${isMDX ? 'mdx' : 'md'}`
     );
 
     // match the first image in the document
-    const [, firstImage, firstImageAlt] = content.match(/<img[^>]+src="([^"]+)"[^>]+alt="([^"]+)"/i) || [];
+    // const [, firstImage, firstImageAlt] = content.match(/<img[^>]+src="([^"]+)"[^>]+alt="([^"]+)"/i) || [];
+
+    let firstImage, firstImageAlt;
 
     return {
       props: {
         ...data,
         ogImage: data.cover || firstImage || null,
         ogImageAlt: data.coverAlt || firstImageAlt || null,
+        folder: articleSlug,
         path,
-        content,
+        content: !isMDX && content,
         lang: locale,
         otherLangs,
       },
     };
   } catch (err) {
-    console.log('Couldnt load', articleSlug);
+    console.log('Couldnt load', articleSlug, err);
     return {
       props: {},
     };
@@ -183,14 +204,16 @@ export async function getStaticPaths() {
     const arraySlug = splits ? splits.slice(1) : [slug];
 
     // finding languages
-    const articles = glob.sync('index*.md', { cwd: folderPath });
+    const articles = glob.sync('index*.+(md|mdx)', { cwd: folderPath });
 
     if (articles.length === 0) continue;
 
     // pushing default lang path
     paths.push({params: {slug: arraySlug}, locale: 'en'});
 
-    if (articles.includes('index.md')) {
+    if (articles.includes('index.mdx')) {
+      articles.splice(articles.indexOf('index.mdx'), 1);
+    } else if (articles.includes('index.md')) {
       articles.splice(articles.indexOf('index.md'), 1);
     }
 

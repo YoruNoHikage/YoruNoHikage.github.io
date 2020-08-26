@@ -1,15 +1,26 @@
 const withOptimizedImages = require('next-optimized-images');
 const path = require('path');
 
-const markdownLoader = (nextConfig = {}) => ({
+const withVideos = (nextConfig = {}) => ({
   ...nextConfig,
   webpack(config, options) {
+    const { isServer } = options;
+
+    const prefix = nextConfig.assetPrefix || '';
+    const directory = nextConfig.assetDirectory || 'static';
+
     config.module.rules.push({
-      test: /\.md$/,
-      use: {
-        loader: path.resolve('./markdown-loader'),
-        options: {},
-      },
+      test: /\.(mp4|webm|ogg|swf|ogv)$/,
+      use: [
+        {
+          loader: require.resolve('file-loader'),
+          options: {
+            publicPath: `${prefix}/_next/${directory}/videos/`,
+            outputPath: `${isServer ? '../' : ''}${directory}/videos/`,
+            name: '[name]-[hash].[ext]',
+          },
+        },
+      ],
     });
 
     if (typeof nextConfig.webpack === 'function') {
@@ -20,7 +31,26 @@ const markdownLoader = (nextConfig = {}) => ({
   },
 });
 
-module.exports = withOptimizedImages(
+const markdownLoader = (nextConfig = {}) => ({
+  ...nextConfig,
+  webpack(config, options) {
+    config.module.rules.push({
+      test: /\.md$/,
+      use: [options.defaultLoaders.babel, path.join(__dirname, './markdown-loader')],
+    }, {
+      test: /\.mdx$/,
+      use: [options.defaultLoaders.babel, '@mdx-js/loader', path.join(__dirname, './fm-loader')],
+    });
+
+    if (typeof nextConfig.webpack === 'function') {
+      return nextConfig.webpack(config, options);
+    }
+
+    return config;
+  },
+});
+
+module.exports = withVideos(withOptimizedImages(
   markdownLoader({
     i18n: {
       locales: ['en', 'fr', 'ja', 'br'],
@@ -44,7 +74,7 @@ module.exports = withOptimizedImages(
     //   ];
     // },
 
-    pageExtensions: ['js', 'jsx', 'md'],
+    pageExtensions: ['js', 'jsx', 'md', 'mdx'],
     trailingSlash: true,
 
     target: 'serverless',
@@ -66,4 +96,4 @@ module.exports = withOptimizedImages(
       return config;
     },
   }),
-);
+));
