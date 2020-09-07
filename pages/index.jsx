@@ -2,11 +2,25 @@ import React from 'react';
 import glob from 'glob';
 import Head from 'next/head';
 import Link from 'next/link';
+import matter from 'gray-matter';
+import hydrate from 'next-mdx-remote/hydrate';
 
+import renderToString from '../render-to-string';
 import Sidebar from '../components/Sidebar';
-import dynamic from 'next/dynamic';
+import CodeBlock from '../components/CodeBlock';
+import Gallery from '../components/Gallery';
+import Video from '../components/Video';
+import YouTube from 'react-youtube';
+import { TwitterTweetEmbed as Tweet } from 'react-twitter-embed';
 
-const componentList = {};
+const components = {
+  pre: props => <div {...props} />,
+  code: CodeBlock,
+  Gallery,
+  Video,
+  YouTube,
+  Tweet,
+};
 
 export default function Home({ articles, featuredArticles }) {
   return (
@@ -23,22 +37,16 @@ export default function Home({ articles, featuredArticles }) {
               {featuredArticles.map((article) => {
                 const {
                   title,
-                  content,
+                  content: source,
                   date: datePublished,
                   category,
                   categories = [],
                   slug,
-                  folder,
                   lang,
                   otherLangs,
                 } = article;
 
-                let Content = () => null;
-
-                if (!content) {
-                  const filename = `index${lang === 'en' ? '' : '.' + lang}.mdx`;
-                  Content = (componentList[filename] && componentList[filename].default) || dynamic(() => import(`../articles/${folder}/index${lang === 'en' ? '' : '.' + lang}.mdx`));
-                }
+                const content = hydrate(source, { components });
 
                 return (
                   <div className="blog-post" key={slug}>
@@ -76,7 +84,7 @@ export default function Home({ articles, featuredArticles }) {
                         <a>{title}</a>
                       </Link>
                     </h2>
-                    {content ? <div lang={lang} dangerouslySetInnerHTML={{ __html: content }} /> : <Content />}
+                    {content}
                   </div>
                 );
               })}
@@ -193,14 +201,14 @@ export async function getStaticProps({ defaultLocale, locale }) {
       articlesPaths.pop();
     }
 
-    let data, content;
+    let data, content, source;
 
     try {
-      const fileContent = await import(`../articles/${dirName}/${filename}`);
+      const {default: fileContent} = await import(`../articles/${dirName}/${filename}`);
 
-      ({ data, default: content } = fileContent);
+      ({ content: source, data } = matter(fileContent));
 
-      componentList[dirName] = fileContent;
+      content = await renderToString(source, { components });
     } catch (err) {
       console.log('Error when importing article', err);
       continue;
@@ -214,8 +222,7 @@ export async function getStaticProps({ defaultLocale, locale }) {
       featuredArticles.push({
         ...data,
         slug,
-        folder: dirName,
-        content: !filename.includes('.mdx') && content,
+        content,
         lang,
         otherLangs,
       });

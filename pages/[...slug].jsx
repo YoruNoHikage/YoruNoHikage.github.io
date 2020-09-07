@@ -2,27 +2,40 @@ import React from 'react';
 import glob from 'glob';
 import Head from 'next/head';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import hydrate from 'next-mdx-remote/hydrate'
+import matter from 'gray-matter';
 
+import renderToString from '../render-to-string'
 import AuthorCard from '../components/AuthorCard';
 import avatar from '../images/yorunohikage.png';
+import CodeBlock from '../components/CodeBlock';
+import Gallery from '../components/Gallery';
+import Video from '../components/Video';
+import YouTube from 'react-youtube';
+import { TwitterTweetEmbed as Tweet } from 'react-twitter-embed';
+
+const components = {
+  pre: props => <div {...props} />,
+  code: CodeBlock,
+  Gallery,
+  Video,
+  YouTube,
+  Tweet,
+};
 
 const baseUrl = 'https://blog.yorunohikage.fr';
-
-const componentList = {};
 
 const getAbsoluteURL = (lang, path) =>
   `https://blog.yorunohikage.fr/${lang !== 'en' ? lang + '/' : ''}${path}`;
 
 export default function Article({
   title,
-  folder,
   path,
   date,
   ogImage,
   ogImageAlt,
-  content,
+  content: source,
   lang,
   otherLangs,
   redirectToLang,
@@ -47,12 +60,7 @@ export default function Article({
     );
   }
 
-  let Content = () => null;
-
-  if (!content) {
-    const filename = `index${lang === 'en' ? '' : '.' + lang}.mdx`;
-    Content = (componentList[filename] && componentList[filename].default) || dynamic(() => import(`../articles/${folder}/index${lang === 'en' ? '' : '.' + lang}.mdx`));
-  }
+  const content = hydrate(source, { components });
 
   return (
     <div>
@@ -115,7 +123,7 @@ export default function Article({
               })}
             </time>
           </em>
-          {content ? <div dangerouslySetInnerHTML={{ __html: content }} /> : <Content />}
+          {content}
         </div>
         <hr />
         <div className="footer">
@@ -143,11 +151,6 @@ export async function getStaticProps({ defaultLocale, locale, params }) {
     cwd: `articles/${articleSlug}/`,
   });
 
-  await Promise.all(articles.map(async (path) => {
-    componentList[path] = await import(`../articles/${articleSlug}/${path}`);
-    return componentList[path];
-  }));
-
   // redirect
   if (locale === defaultLocale && !articles.includes('index.md') && !articles.includes('index.mdx')) {
     const redirectToLang = articles[0].match(/index\.(.+)\.mdx?/)[1];
@@ -163,23 +166,25 @@ export async function getStaticProps({ defaultLocale, locale, params }) {
   const isMDX = articles.includes(`index${locale === 'en' ? '' : '.' + locale}.mdx`);
 
   try {
-    const { default: content, data } = await import(
+    const { default: fileContent } = await import(
       `../articles/${articleSlug}/index${locale === defaultLocale ? '' : '.' + locale}.${isMDX ? 'mdx' : 'md'}`
     );
 
+    let firstImage, firstImageAlt;
+    const { content: source, data } = matter(fileContent);
+
+    const content = await renderToString(source, { components, scope: data });
+
     // match the first image in the document
     // const [, firstImage, firstImageAlt] = content.match(/<img[^>]+src="([^"]+)"[^>]+alt="([^"]+)"/i) || [];
-
-    let firstImage, firstImageAlt;
 
     return {
       props: {
         ...data,
         ogImage: data.cover || firstImage || null,
         ogImageAlt: data.coverAlt || firstImageAlt || null,
-        folder: articleSlug,
         path,
-        content: !isMDX && content,
+        content,
         lang: locale,
         otherLangs,
       },

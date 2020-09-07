@@ -35,11 +35,8 @@ const markdownLoader = (nextConfig = {}) => ({
   ...nextConfig,
   webpack(config, options) {
     config.module.rules.push({
-      test: /\.md$/,
-      use: [options.defaultLoaders.babel, path.join(__dirname, './markdown-loader')],
-    }, {
-      test: /\.mdx$/,
-      use: [options.defaultLoaders.babel, '@mdx-js/loader', path.join(__dirname, './fm-loader')],
+      test: /\.mdx?$/,
+      use: ['raw-loader', 'extract-loader', 'markdown-image-loader'],
     });
 
     if (typeof nextConfig.webpack === 'function') {
@@ -50,8 +47,8 @@ const markdownLoader = (nextConfig = {}) => ({
   },
 });
 
-module.exports = withVideos(withOptimizedImages(
-  markdownLoader({
+module.exports = withVideos(withOptimizedImages({
+  ...markdownLoader({
     i18n: {
       locales: ['en', 'fr', 'ja', 'br'],
       defaultLocale: 'en',
@@ -96,4 +93,11 @@ module.exports = withVideos(withOptimizedImages(
       return config;
     },
   }),
-));
+  optimizeImagesInDev: true,
+  defaultImageLoader: 'responsive-loader',
+  responsive: {
+    sizes: [320, 640, 960, 1200, 1800, 2400],
+    placeholder: true,
+    placeholderSize: 20,
+  },
+}));

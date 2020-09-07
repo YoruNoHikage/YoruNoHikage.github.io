@@ -77,7 +77,7 @@ You can explore a bit more these solutions (with caching) in the articles [Next.
 
 **But I know this is not what you want.**
 
-Either way, your file is not generated statically and if you're like, you know you can go f... yourself if you try to glob the filesystem on now.sh.
+Either way, your file is not generated statically and if you're like me, you know you can go f... yourself if you try to glob the filesystem on now.sh.
 
 ## So how can I render it statically during the build process?
 

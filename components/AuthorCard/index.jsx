@@ -1,7 +1,4 @@
 import React from 'react';
-import { Remarkable } from 'remarkable';
-
-const md = new Remarkable();
 
 export default function AuthorCard({
   name,
@@ -24,12 +21,7 @@ export default function AuthorCard({
         <a href={twitterLink} title={`${username} on Twitter`}>
           {username}
         </a>
-        <p
-          style={{ margin: '0' }}
-          dangerouslySetInnerHTML={{
-            __html: md.render(children).match(/<p>([^]+)<\/p>/)[1],
-          }}
-        />
+        <p style={{ margin: 0 }}>{children}</p>
       </div>
     </div>
   );
