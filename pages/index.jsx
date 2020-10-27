@@ -84,7 +84,9 @@ export default function Home({ articles, featuredArticles }) {
                         <a>{title}</a>
                       </Link>
                     </h2>
-                    {content}
+                    <div lang={lang}>
+                      {content}
+                    </div>
                   </div>
                 );
               })}
@@ -201,6 +203,10 @@ export async function getStaticProps({ defaultLocale, locale }) {
       articlesPaths.pop();
     }
 
+    const otherLangs = articlesPaths.map(
+      (article) => article.match(/.*index\.(.+)\.mdx?/)[1]
+    );
+
     let data, content, source;
 
     try {
@@ -208,32 +214,30 @@ export async function getStaticProps({ defaultLocale, locale }) {
 
       ({ content: source, data } = matter(fileContent));
 
-      content = await renderToString(source, { components });
+      // prevent building article if we're not going to display it anyway
+      if (featuredArticles.length <= 5) {
+        content = await renderToString(source, { components });
+
+        featuredArticles.push({
+          ...data,
+          slug,
+          content,
+          lang,
+          otherLangs,
+        });
+      }
+      else {
+        articles.push({
+          ...data,
+          slug,
+          lang,
+          otherLangs,
+        });
+      }
+
     } catch (err) {
       console.log('Error when importing article', err);
       continue;
-    }
-
-    const otherLangs = articlesPaths.map(
-      (article) => article.match(/.*index\.(.+)\.mdx?/)[1]
-    );
-
-    if (featuredArticles.length <= 5) {
-      featuredArticles.push({
-        ...data,
-        slug,
-        content,
-        lang,
-        otherLangs,
-      });
-    }
-    else {
-      articles.push({
-        ...data,
-        slug,
-        lang,
-        otherLangs,
-      });
     }
   }
 
