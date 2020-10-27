@@ -5,122 +5,7 @@ import Link from 'next/link';
 
 import Sidebar from '../components/Sidebar';
 
-export default function Home({ articles }) {
-  const sortedArticles = [...articles];
-
-  sortedArticles.reverse();
-  // sortedArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-  const formattedArticles = sortedArticles.map((article, i) => {
-    const {
-      title,
-      content,
-      date: datePublished,
-      category,
-      categories = [],
-      slug,
-      lang,
-      otherLangs,
-    } = article;
-
-    category && categories.push(category);
-
-    if (i >= 5) {
-      return (
-        <div
-          key={slug}
-          className="blog-post"
-          style={{
-            margin: '0',
-            overflow: 'hidden',
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-          }}
-        >
-          <time dateTime={datePublished}>
-            {new Date(datePublished).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-            })}
-          </time>
-          <ul
-            style={{
-              padding: '0',
-              margin: '0',
-              listStyle: 'none',
-              float: 'right',
-            }}
-          >
-            {otherLangs.map((l) => (
-              <li key={l} style={{ display: 'inline', margin: '0 5px' }}>
-                <Link href="/[...slug]" as={`/${l}/${slug}`}>
-                  <a hrefLang={l}>[{l}]</a>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <h2
-            style={{
-              display: 'inline',
-              fontSize: '16px',
-              marginLeft: '5px',
-            }}
-          >
-            <Link
-              href="/[...slug]"
-              as={'/' + (lang === 'en' ? '' : lang + '/') + slug}
-            >
-              <a style={{ borderBottom: 'none' }}>
-                {lang !== 'en' && `[${lang}] `}
-                {title}
-              </a>
-            </Link>
-          </h2>
-        </div>
-      );
-    }
-
-    return (
-      <div className="blog-post" key={slug}>
-        <time dateTime={datePublished}>
-          {new Date(datePublished).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-          })}
-        </time>
-        <ul style={{ display: 'inline-block', margin: '0', padding: '0' }}>
-          {categories.map((category) => (
-            <li key={category} className="blog-category">
-              {category}
-            </li>
-          ))}
-        </ul>
-        <ul
-          style={{
-            padding: '0',
-            margin: '5px 0',
-            listStyle: 'none',
-            float: 'right',
-          }}
-        >
-          {otherLangs.map((l) => (
-            <li key={l} style={{ display: 'inline', margin: '0 5px' }}>
-              <Link href="/[...slug]" as={`/${l}/${slug}`}>
-                <a hrefLang={l}>[{l}]</a>
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <h2>
-          <Link href="/[...slug]" as={'/' + slug}>
-            <a>{title}</a>
-          </Link>
-        </h2>
-        <div dangerouslySetInnerHTML={{ __html: content }} />
-      </div>
-    );
-  });
-
+export default function Home({ articles, featuredArticles }) {
   return (
     <div className="wrapper">
       <Head>
@@ -131,7 +16,130 @@ export default function Home({ articles }) {
         <Sidebar />
         <div className="content">
           <div className="main">
-            <div className="main-inner">{formattedArticles}</div>
+            <div className="main-inner">
+              {featuredArticles.map((article) => {
+                const {
+                  title,
+                  content,
+                  date: datePublished,
+                  category,
+                  categories = [],
+                  slug,
+                  lang,
+                  otherLangs,
+                } = article;
+
+                return (
+                  <div className="blog-post" key={slug}>
+                    <time dateTime={datePublished}>
+                      {new Date(datePublished).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                      })}
+                    </time>
+                    <ul style={{ display: 'inline-block', margin: '0', padding: '0' }}>
+                      {categories.map((category) => (
+                        <li key={category} className="blog-category">
+                          {category}
+                        </li>
+                      ))}
+                    </ul>
+                    <ul
+                      style={{
+                        padding: '0',
+                        margin: '5px 0',
+                        listStyle: 'none',
+                        float: 'right',
+                      }}
+                    >
+                      {otherLangs.map((l) => (
+                        <li key={l} style={{ display: 'inline', margin: '0 5px' }}>
+                          <Link href="/[...slug]" as={`/${l}/${slug}`}>
+                            <a hrefLang={l}>[{l}]</a>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                    <h2>
+                      <Link href="/[...slug]" as={'/' + slug}>
+                        <a>{title}</a>
+                      </Link>
+                    </h2>
+                    <div lang={lang}>
+                      {content}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {articles.map((article, i) => {
+                const {
+                  title,
+                  content: source,
+                  date: datePublished,
+                  category,
+                  categories = [],
+                  slug,
+                  lang,
+                  otherLangs,
+                } = article;
+
+                category && categories.push(category);
+
+                return (
+                  <div
+                    key={slug}
+                    className="blog-post"
+                    style={{
+                      margin: '0',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    <time dateTime={datePublished}>
+                      {new Date(datePublished).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                      })}
+                    </time>
+                    <ul
+                      style={{
+                        padding: '0',
+                        margin: '0',
+                        listStyle: 'none',
+                        float: 'right',
+                      }}
+                    >
+                      {otherLangs.map((l) => (
+                        <li key={l} style={{ display: 'inline', margin: '0 5px' }}>
+                          <Link href="/[...slug]" as={`/${l}/${slug}`}>
+                            <a hrefLang={l}>[{l}]</a>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                    <h2
+                      style={{
+                        display: 'inline',
+                        fontSize: '16px',
+                        marginLeft: '5px',
+                      }}
+                    >
+                      <Link
+                        href="/[...slug]"
+                        as={'/' + (lang === 'en' ? '' : lang + '/') + slug}
+                      >
+                        <a style={{ borderBottom: 'none' }}>
+                          {lang !== 'en' && `[${lang}] `}
+                          {title}
+                        </a>
+                      </Link>
+                    </h2>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -140,8 +148,9 @@ export default function Home({ articles }) {
 }
 
 export async function getStaticProps() {
-  const folders = glob.sync('articles/*/');
+  const folders = glob.sync('articles/*/').reverse();
   const articles = [];
+  const featuredArticles = [];
 
   for (let folderPath of folders) {
     const dirName = folderPath.split('/')[1];
@@ -179,18 +188,29 @@ export async function getStaticProps() {
       (article) => article.match(/.*index\.(.+)\.md/)[1]
     );
 
-    articles.push({
-      ...data,
-      slug,
-      content,
-      lang,
-      otherLangs,
-    });
+    if (featuredArticles.length <= 5) {
+      featuredArticles.push({
+        ...data,
+        slug,
+        content,
+        lang,
+        otherLangs,
+      });
+    }
+    else {
+      articles.push({
+        ...data,
+        slug,
+        lang,
+        otherLangs,
+      });
+    }
   }
 
   return {
     props: {
       articles,
+      featuredArticles,
     },
   };
 }
