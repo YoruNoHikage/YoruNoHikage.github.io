@@ -4,8 +4,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import matter from 'gray-matter';
 import hydrate from 'next-mdx-remote/hydrate';
+import renderToString from 'next-mdx-remote/render-to-string';
 
-import renderToString from '../render-to-string';
 import Sidebar from '../components/Sidebar';
 import CodeBlock from '../components/CodeBlock';
 import Gallery from '../components/Gallery';

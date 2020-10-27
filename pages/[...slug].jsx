@@ -4,9 +4,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import hydrate from 'next-mdx-remote/hydrate'
+import renderToString from 'next-mdx-remote/render-to-string';
 import matter from 'gray-matter';
 
-import renderToString from '../render-to-string'
 import AuthorCard from '../components/AuthorCard';
 import avatar from '../images/yorunohikage.png';
 import CodeBlock from '../components/CodeBlock';

@@ -1,5 +1,4 @@
 const withOptimizedImages = require('next-optimized-images');
-const path = require('path');
 
 const withVideos = (nextConfig = {}) => ({
   ...nextConfig,
@@ -36,7 +35,7 @@ const markdownLoader = (nextConfig = {}) => ({
   webpack(config, options) {
     config.module.rules.push({
       test: /\.mdx?$/,
-      use: ['raw-loader', 'extract-loader', 'markdown-image-loader'],
+      use: ['raw-loader', 'extract-loader', './mdx-file-loader'],
     });
 
     if (typeof nextConfig.webpack === 'function') {
@@ -76,6 +75,7 @@ module.exports = withVideos(withOptimizedImages({
 
     target: 'serverless',
     webpack(config, { dev, isServer }) {
+      config.node = { fs: 'empty' };
       if (!dev && isServer) {
         const originalEntry = config.entry;
 
