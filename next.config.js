@@ -23,7 +23,7 @@ const markdownLoader = (nextConfig = {}) => ({
 module.exports = withOptimizedImages(
   markdownLoader({
     pageExtensions: ['js', 'jsx', 'md'],
-    exportTrailingSlash: true,
+    trailingSlash: true,
 
     target: 'serverless',
     webpack(config, { dev, isServer }) {
