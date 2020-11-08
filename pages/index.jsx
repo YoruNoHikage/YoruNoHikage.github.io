@@ -54,20 +54,18 @@ export default function Home({ articles, featuredArticles }) {
                     >
                       {otherLangs.map((l) => (
                         <li key={l} style={{ display: 'inline', margin: '0 5px' }}>
-                          <Link href="/[...slug]" as={`/${l}/${slug}`}>
+                          <Link href="/[...slug]" as={`/${slug}`} locale={l}>
                             <a hrefLang={l}>[{l}]</a>
                           </Link>
                         </li>
                       ))}
                     </ul>
                     <h2>
-                      <Link href="/[...slug]" as={'/' + slug}>
+                      <Link href="/[...slug]" as={'/' + slug} locale={lang}>
                         <a>{title}</a>
                       </Link>
                     </h2>
-                    <div lang={lang}>
-                      {content}
-                    </div>
+                    <div lang={lang} dangerouslySetInnerHTML={{ __html: content }} />
                   </div>
                 );
               })}
@@ -75,7 +73,6 @@ export default function Home({ articles, featuredArticles }) {
               {articles.map((article, i) => {
                 const {
                   title,
-                  content: source,
                   date: datePublished,
                   category,
                   categories = [],
@@ -113,7 +110,7 @@ export default function Home({ articles, featuredArticles }) {
                     >
                       {otherLangs.map((l) => (
                         <li key={l} style={{ display: 'inline', margin: '0 5px' }}>
-                          <Link href="/[...slug]" as={`/${l}/${slug}`}>
+                          <Link href="/[...slug]" as={`/${slug}`} locale={l}>
                             <a hrefLang={l}>[{l}]</a>
                           </Link>
                         </li>
@@ -128,7 +125,8 @@ export default function Home({ articles, featuredArticles }) {
                     >
                       <Link
                         href="/[...slug]"
-                        as={'/' + (lang === 'en' ? '' : lang + '/') + slug}
+                        as={'/' + slug}
+                        locale={lang}
                       >
                         <a style={{ borderBottom: 'none' }}>
                           {lang !== 'en' && `[${lang}] `}

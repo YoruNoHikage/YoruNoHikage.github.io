@@ -22,6 +22,28 @@ const markdownLoader = (nextConfig = {}) => ({
 
 module.exports = withOptimizedImages(
   markdownLoader({
+    i18n: {
+      locales: ['en', 'fr', 'ja', 'br'],
+      defaultLocale: 'en',
+      localeDetection: false,
+    },
+
+    // doesn't seem to work for now
+    // async redirects() {
+    //   return [
+    //     {
+    //       source: '/en',
+    //       destination: '/',
+    //       permanent: true,
+    //     },
+    //     {
+    //       source: '/en/:slug*',
+    //       destination: '/:slug*',
+    //       permanent: true,
+    //     },
+    //   ];
+    // },
+
     pageExtensions: ['js', 'jsx', 'md'],
     trailingSlash: true,
 

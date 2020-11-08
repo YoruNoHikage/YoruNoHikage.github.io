@@ -29,6 +29,7 @@ export default function Article({
   };
 
   if (redirectToLang) {
+    // doesn't seem to work with the locale option
     if (typeof window !== 'undefined') replace(`/${redirectToLang}/${path}`);
 
     return (
@@ -64,7 +65,7 @@ export default function Article({
       </Head>
 
       <div className="top-links">
-        <Link href="/">
+        <Link href="/" locale={false}>
           <a className="gohome">All Articles</a>
         </Link>
 
@@ -73,10 +74,10 @@ export default function Article({
             {otherLangs.map((l) => (
               <Link
                 href="/[...slug]"
-                as={'/' + (l !== 'en' ? l + '/' : '') + path}
-                hrefLang={l}
+                href={'/' + path}
+                locale={l}
               >
-                <a>{l}</a>
+                <a hrefLang={l}>{l}</a>
               </Link>
             ))}
           </div>
@@ -113,38 +114,31 @@ export default function Article({
   );
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({ defaultLocale, locale, params }) {
   const { slug } = params;
 
-  let lang = 'en';
   let articleSlug = slug.join('-');
   let path = slug.join('/');
-
-  if (slug[0].match(/^([a-z]{2})(-[A-Z]{2})?$/)) {
-    lang = slug[0];
-    articleSlug = slug.slice(1).join('-');
-    path = slug.slice(1).join('/');
-  }
 
   const articles = glob.sync('index*.md', {
     cwd: `articles/${articleSlug}/`,
   });
 
   // redirect
-  if (lang === 'en' && !articles.includes('index.md')) {
+  if (locale === defaultLocale && !articles.includes('index.md')) {
     const redirectToLang = articles[0].match(/index\.(.+)\.md/)[1];
     return { props: { redirectToLang, path } };
   }
 
   const otherLangs = articles
     .map((path) =>
-      path.includes('index.md') ? 'en' : path.match(/index\.(.+)\.md/)[1]
+      path.includes('index.md') ? defaultLocale : path.match(/index\.(.+)\.md/)[1]
     )
-    .filter((otherLang) => otherLang !== lang);
+    .filter((otherLang) => otherLang !== locale);
 
   try {
     const { content, data } = await import(
-      `../articles/${articleSlug}/index${lang === 'en' ? '' : '.' + lang}.md`
+      `../articles/${articleSlug}/index${locale === defaultLocale ? '' : '.' + locale}.md`
     );
 
     return {
@@ -152,7 +146,7 @@ export async function getStaticProps({ params }) {
         ...data,
         path,
         content,
-        lang,
+        lang: locale,
         otherLangs,
       },
     };
@@ -166,7 +160,7 @@ export async function getStaticProps({ params }) {
 
 export async function getStaticPaths() {
   const folders = glob.sync('articles/*/');
-  const slugs = [];
+  const paths = [];
 
   for (let folderPath of folders) {
     const dirName = folderPath.split('/')[1];
@@ -181,7 +175,7 @@ export async function getStaticPaths() {
     if (articles.length === 0) continue;
 
     // pushing default lang path
-    slugs.push(arraySlug);
+    paths.push({params: {slug: arraySlug}, locale: 'en'});
 
     if (articles.includes('index.md')) {
       articles.splice(articles.indexOf('index.md'), 1);
@@ -190,14 +184,12 @@ export async function getStaticPaths() {
     for (let article of articles) {
       const lang = article.match(/.*index\.(.+)\.md/)[1];
 
-      slugs.push([lang, ...arraySlug]);
+      paths.push({params: {slug: arraySlug}, locale: lang});
     }
   }
 
   return {
-    paths: slugs.map((slug) => ({
-      params: { slug },
-    })),
+    paths,
     fallback: false,
   };
 }

@@ -4,7 +4,7 @@
   "description": "YoruNoHikage's blog",
   "scripts": {
     "dev": "next",
-    "build": "next build && yarn build:sitemap && next export",
+    "build": "next build && yarn build:sitemap",
     "build:sitemap": "node ./.next/serverless/scripts/generate-sitemap.js"
   },
   "keywords": [
@@ -34,7 +34,7 @@
     "imagemin-svgo": "^8.0.0",
     "lost": "^8.0.0",
     "lqip-loader": "^2.2.0",
-    "next": "^10.0.0",
+    "next": "10.0.2-canary.4",
     "next-optimized-images": "^2.5.8",
     "postcss-flexbugs-fixes": "^4.2.0",
     "postcss-preset-env": "^6.7.0",

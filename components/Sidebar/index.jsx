@@ -18,7 +18,7 @@ export default function Sidebar() {
   // })
 
   const title = (
-    <Link href="/">
+    <Link href="/" locale={false}>
       <a
         style={{
           textDecoration: 'none',
@@ -40,7 +40,7 @@ export default function Sidebar() {
       <div className="sidebar-inner">
         <div className="blog-details">
           <header>
-            <Link href="/">
+            <Link href="/" locale={false}>
               <a
                 style={{
                   textDecoration: 'none',

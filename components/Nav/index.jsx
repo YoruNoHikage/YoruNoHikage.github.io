@@ -9,14 +9,14 @@ export default function Nav() {
     <nav className="blog-nav">
       <ul>
         <li>
-          <Link href="/">
+          <Link href="/" locale={false}>
             <a className={router.pathname === '/' ? 'current' : undefined}>
               Articles
             </a>
           </Link>
         </li>
         <li>
-          <Link href="/about">
+          <Link href="/about" locale={false}>
             <a className={router.pathname === '/about' ? 'current' : undefined}>
               About me
             </a>
