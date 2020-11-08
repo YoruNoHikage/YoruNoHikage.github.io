@@ -145,7 +145,13 @@ export default function Home({ articles, featuredArticles }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getStaticProps({ defaultLocale, locale }) {
+  if (locale !== defaultLocale) {
+    return {
+      notFound: true,
+    };
+  }
+
   const folders = glob.sync('articles/*/').reverse();
   const articles = [];
   const featuredArticles = [];

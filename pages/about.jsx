@@ -20,8 +20,11 @@ export default function About() {
                   <h2>About</h2>
                   <p>
                     Hey guys, I'm a programmer from Brittany, France. I don't
-                    know what to say for now, so you can <a href="https://www.alexislaunay.fr/en">check my pro
-                    website</a> instead!
+                    know what to say for now, so you can{' '}
+                    <a href="https://www.alexislaunay.fr/en">
+                      check my pro website
+                    </a>{' '}
+                    instead!
                   </p>
                 </div>
               </div>
@@ -31,4 +34,14 @@ export default function About() {
       </div>
     </div>
   );
+}
+
+export async function getStaticProps({ defaultLocale, locale }) {
+  if (locale !== defaultLocale) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return { props: {} };
 }
