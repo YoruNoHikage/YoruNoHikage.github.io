@@ -80,7 +80,6 @@
 }
 .lang-selector a {
 	display: inline-block;
-	font-size: 16px;
 	text-align: center;
 	padding: 8px 16px;
 	color: #999;
@@ -88,6 +87,7 @@
 	font-weight: 400;
 	border-radius: 3px;
 	margin-left: 10px;
+	text-shadow: none;
 }
 .lang-selector a:focus {
 	color: #444;
