@@ -17,11 +17,15 @@
 	overflow: auto;
 	padding: 0.25em 0.5em;
 }
+pre {
+	margin-left: -1.3125em;
+	margin-right: -1.3125em;
+}
 pre code {
 	display: block;
-	border-radius: 3px;
+	border-radius: 8px;
 	overflow-x: auto;
-	padding: 0.5em 1em;
+	padding: 1.3125em;
 	color: #333;
 	background: #f8f8f8;
 }

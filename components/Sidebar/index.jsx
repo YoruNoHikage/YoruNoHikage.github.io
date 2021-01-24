@@ -17,24 +17,6 @@ export default function Sidebar() {
   //   categories.forEach(cat => allCategories.add(cat))
   // })
 
-  const title = (
-    <Link href="/" locale={false}>
-      <a
-        style={{
-          textDecoration: 'none',
-          borderBottom: 'none',
-          color: 'inherit',
-        }}
-      >
-        Alexis Launay
-        <span style={{ color: 'grey', fontSize: '14px', fontWeight: '100' }}>
-          {' '}
-          - @YoruNoHikage
-        </span>
-      </a>
-    </Link>
-  );
-
   return (
     <div className="sidebar">
       <div className="sidebar-inner">
@@ -56,7 +38,16 @@ export default function Sidebar() {
                 />
               </a>
             </Link>
-            {isHome ? <h1>{title}</h1> : <h2>{title}</h2>}
+            <h1>
+              <Link href="/" locale={false}>
+                <a>
+                  Alexis Launay
+                  <span className="username">
+                    @YoruNoHikage
+                  </span>
+                </a>
+              </Link>
+            </h1>
             <p>Pop punk web developer indie game curious guy!</p>
           </header>
         </div>

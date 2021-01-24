@@ -5,7 +5,6 @@ import Router from 'next/router';
 import * as gtag from '../lib/gtag';
 
 import '../styles/reset.css';
-import '../styles/typography.css';
 import '../styles/base.css';
 import '../styles/highlight.css';
 import '../styles/blog-post.css';
@@ -41,17 +40,7 @@ export default function App({ Component, pageProps }) {
         <link rel="manifest" href="/site.webmanifest" />
 
         <link
-          href="https://fonts.googleapis.com/css?family=Roboto:400,400italic,500,700&subset=latin"
-          rel="stylesheet"
-          type="text/css"
-        />
-        <link
           href="https://fonts.googleapis.com/css?family=Inconsolata:400,700&subset=latin-ext"
-          rel="stylesheet"
-          type="text/css"
-        />
-        <link
-          href="/fonts/fontawesome/style.css"
           rel="stylesheet"
           type="text/css"
         />

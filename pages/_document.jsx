@@ -1,5 +1,8 @@
 import React from 'react';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
+import { TypographyStyle, GoogleFont } from 'react-typography';
+
+import typography from '../utils/typography';
 
 import { GA_TRACKING_ID } from '../lib/gtag';
 
@@ -35,6 +38,8 @@ export default class extends Document {
         </Head>
         <body>
           <Main />
+          <TypographyStyle typography={typography} />
+          <GoogleFont typography={typography} />
           <NextScript />
         </body>
       </Html>

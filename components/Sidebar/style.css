@@ -17,22 +17,28 @@
 	bottom: 0;
 }
 .sidebar .sidebar-inner img {
-	display: inline-block;
-	margin-bottom: 0;
-	border-radius: 50%;
-	background-clip: padding-box;
+	margin: 0;
 }
-.sidebar .sidebar-inner h1, .sidebar .sidebar-inner h2 {
-	font-size: 18px;
+.sidebar .sidebar-inner h1 {
+	font-size: 32px;
 	font-weight: 500;
 	line-height: 18px;
 	margin: 20px 0 10px;
 }
+.sidebar .sidebar-inner h1 a {
+	text-decoration: none;
+	border-bottom: none;
+	color: inherit;
+}
+.sidebar .sidebar-inner h1 .username {
+	display: block;
+	color: grey;
+	font-size: 16px;
+	font-weight: 100;
+	margin-top: 10px;
+}
 .sidebar .sidebar-inner p {
 	color: #888;
-	font-size: 16px;
-	line-height: 26px;
-	margin-bottom: 26px;
 }
 .sidebar .sidebar-inner p.copyright {
 	color: #b6b6b6;

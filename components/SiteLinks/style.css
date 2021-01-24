@@ -1,31 +1,14 @@
 .blog-links {
-	margin-top: 30px;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
 }
-.blog-links ul {
-	list-style: none;
-	padding: 0;
-	margin: 10px 0;
-}
-.blog-links ul > li {
-	display: inline-block;
-	margin-right: 5px;
-	text-align: center;
-	height: 24px;
-	width: 24px;
+.blog-links a {
+	display: block;
+	width: 34px;
+	height: 34px;
+	margin: 0 5px;
+	background: rgb(230, 230, 230);
+	padding: 5px;
 	border-radius: 3px;
-	background: #f4f4f4;
-}
-.blog-links ul > li:hover {
-	background: #f4f4f4;
-}
-.blog-links ul > li > a {
-	border-bottom: 0;
-}
-.blog-links ul > li > a > i {
-	color: #606060;
-	font-size: 14px;
-	line-height: 24px;
-}
-.blog-links ul > li:hover a > i {
-	color: #444;
 }
