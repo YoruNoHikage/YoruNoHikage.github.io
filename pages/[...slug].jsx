@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import AuthorCard from '../components/AuthorCard';
 import avatar from '../images/yorunohikage.png';
 
+const baseUrl = 'https://blog.yorunohikage.fr';
+
 const getAbsoluteURL = (lang, path) =>
   `https://blog.yorunohikage.fr/${lang !== 'en' ? lang + '/' : ''}${path}`;
 
@@ -14,6 +16,8 @@ export default function Article({
   title,
   path,
   date,
+  ogImage,
+  ogImageAlt,
   content,
   lang,
   otherLangs,
@@ -60,8 +64,12 @@ export default function Article({
         <meta property="og:title" content={title} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={getAbsoluteURL(lang, path)} />
+        {ogImage && <meta property="og:image" content={baseUrl + ogImage} />}
+        {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
 
-        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+        {ogImage && <meta name="twitter:image" content={baseUrl + ogImage} />}
+        {ogImageAlt && <meta name="twitter:image:alt" content={ogImageAlt} />}
       </Head>
 
       <div className="top-links">
@@ -141,9 +149,14 @@ export async function getStaticProps({ defaultLocale, locale, params }) {
       `../articles/${articleSlug}/index${locale === defaultLocale ? '' : '.' + locale}.md`
     );
 
+    // match the first image in the document
+    const [, firstImage, firstImageAlt] = content.match(/<img[^>]+src="([^"]+)"[^>]+alt="([^"]+)"/i) || [];
+
     return {
       props: {
         ...data,
+        ogImage: data.cover || firstImage || null,
+        ogImageAlt: data.coverAlt || firstImageAlt || null,
         path,
         content,
         lang: locale,
