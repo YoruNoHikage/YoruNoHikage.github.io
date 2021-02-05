@@ -17,7 +17,7 @@ Oublié le temple japonais relié par un long chemin à l'écart de la ville ou 
 
 Une gigantesque porte vers le Nether en fait **un site touristique accessible** pour qui traverser les dimensions ne représente aucun problème. S'ajoutant à cela, un port y est adossé afin de faciliter les déplacements fluviaux vers les différents endroits qui vous seront présentés dans cet article. Il est à noter la présence d'une genre de caravelle dont les amarres ne sauraient être larguées de sitôt.
 
-**Le reste de la ville est composé d'un certain nombre d'habitations construites par les joueurs** mais fondée sur une base pré-existante. On y trouve de nombreux villageois dans des corps de métier tout aussi variés s'affairant à leurs occupations quotidiennes. De temps à autres, zombies et autres monstres viennent perturber la tranquilité de la ville et défoncer quelques portes dans leurs poursuites meurtrières des joueurs.
+**Le reste de la ville est composé d'un certain nombre d'habitations construites par les joueurs** mais fondé sur une base pré-existante. On y trouve de nombreux villageois dans des corps de métier tout aussi variés s'affairant à leurs occupations quotidiennes. De temps à autres, zombies et autres monstres viennent perturber la tranquilité de la ville et défoncer quelques portes dans leurs poursuites meurtrières des joueurs.
 
 ![Capture d'écran de la vue d'une tour du chateau sur la ville de Puy du Ouf](puy-du-ouf-vue-du-chateau.png)
 
@@ -27,23 +27,23 @@ Le Puy du Ouf fut l'occasion de se familiariser avec ce monde hostile. Mais vint
 
 **Pour la première expédition, l'objectif fut d'aller découvrir l'ouest**. Nous fûmes cependant coupé dans notre élan en arrivant à l'endroit d'où nous étions partis. Cocasse, l'antagonisme parfait de la découverte des amériques. Croyant découvrir de nouveaux territoires, **nous avions seulement fait un joli tour.**
 
-Tout ne fut pas vain pour autant, les **deux nouveaux villages découverts** sur la route furent immédiatement pillés, une pratique systématique questionnable, et nommés. **Sunrise Valley**, pour cette première bourgade de quelques maisons perdues entre deux montages qui ne nous a pas retenue plus longtemps. Et **La Grande Motte sur Mer**, un village près de la côte qui allait subir quelques changements.
+Tout ne fut pas vain pour autant. Les **deux nouveaux villages découverts** sur la route furent immédiatement pillés - une pratique systématique questionnable - puis nommés. Le premier, composé de quelques maisons perdues au creux de deux montagnes fut baptisé **Sunrise Valley**. Nous n’y restâmes que peu de temps, notre intérêt fut bien plus grand pour la deuxième bourgade. **La Grande Motte sur Mer**, sa colline surplombant la côte justifia le choix du nom, allait être témoin de nombreux changements.
 
-Mais la conquête de l'End n'attendit pas !
+À peine les premières pancartes posées, un besoin d'aventure se fit ressentir. L'End nous appelait. Et tel un mineur sentant la proximité du diamant, nous ne pûmes résister à la tentation d'y aller.
 
 ![Capture d'écran de la place principale de La Grande Motte sur Mer avec son totem et ses cloches](grande-motte-place-principale.png)
 
 ## À la conquête de l'End
 
-Revenu au Puy du Ouf et stuffé comme un cochon grâce aux marchands du château, le groupe de 5-6 joueurs passa la grande porte du Nether pour ensuite rejoindre, par un chemin protégé, la porte de l'End. Par **une stratégie de groupe bien ficelée** consistant à se poser individuellement sur les tours **pour bolosser le dragon à coup de flêches**, il fut facilement vaincu non sans quelques décès. RIP.
+Revenu au Puy du Ouf et stuffé comme des cochons grâce à la générosité des marchands du château, le groupe d'une demi-douzaine de bras cassés passa l'imposante porte du Nether pour ensuite rejoindre, empruntant un chemin protégé, la porte de l'End. Par **une stratégie de groupe bien ficelée**, chacun des membres alla se poser individuellement sur une tour **afin de bolosser le dragon à coup de flêches**. Il fut facilement vaincu non sans quelques décès. RIP.
 
-La difficulté de la tâche résida principalement dans le fait d'**éviter le regard des endermen qui pullulent dans l'End**. Au moindre croisement, c'est la victimisation assurée. Seul l'eau peut vous protéger de ses êtres qui se téléportent à vos côtés instantanément pour vous asséner de fourbes petits coups.
+Dans ce monde, la difficulté de la tâche réside principalement dans le fait d'**éviter le regard des endermen qui pullulent**. Au moindre croisement du regard, c'est la victimisation assurée. Seul l'eau peut vous protéger de ses êtres qui se téléportent à vos côtés instantanément pour vous asséner de petits coups fourbes.
 
-Mais là ne s'arrêta pas l'histoire, **il est ensuite possible de se mettre à la recherche de cités de l'End**, sortes de tours contenant des cadeaux, rien de bien glorieux. Après une longue errance entre les îles volantes dangereuses et les quelques petites cités quelques peu insignifiantes, le groupe revint sain et sauf téléportés par les Saintes Commandes admin. C'est chiant de revenir au portail du début - eh oh ça va hein !
+Mais là ne s'arrête pas l'histoire, **il est ensuite possible de se mettre à la recherche de cités de l'End**, sortes de tours contenant des cadeaux, rien de bien glorieux. Après une longue errance entre les îles volantes dangereuses et les quelques petites cités quelques peu insignifiantes, le groupe revint sain et sauf téléportés par les Saintes Commandes admin. C'est chiant de revenir au portail du début - eh oh ça va hein !
 
 ## La Grande Motte sur Mer
 
-Ce fait héroïque accompli, les sessions suivantes furent consacrées quasi-exclusivement à re-dynamiser, pour ne pas dire gentrifier, l'endroit. **Une ligne de chemin de fer relie désormais Le Puy du Ouf et la Grande Motte sur Mer.** En majorité souterraine et aux virages très serrés dignes des meilleures attractions de Disneyland, c'est dire si ça secoue ! Cela reste supportable pour des enfants qui ne trouveront rien à redire bien évidemment. Attention à ne pas vomir son quatre heure.
+Ce fait héroïque accompli, les sessions suivantes furent consacrées quasi-exclusivement à re-dynamiser, pour ne pas dire gentrifier la Grande Motte sur Mer. **Une ligne de chemin de fer la relie désormais au Puy du Ouf.** En majorité souterraine et aux virages très serrés, c'est dire si ça secoue ! Elle est digne des meilleures attractions de Disneyland, supportable pour des enfants qui ne trouveront rien à redire bien évidemment. Attention à ne pas vomir son quatre heure.
 
 ![Capture d'écran d'un pont du chemin de fer reliant le Puy du Ouf à la Grande Motte sur Mer](grande-motte-chemin-de-fer-pont.png)
 
