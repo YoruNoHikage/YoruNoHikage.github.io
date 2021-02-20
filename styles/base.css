@@ -31,3 +31,10 @@
 		padding: 25px 20px;
 	}
 }
+
+.aspect-ratio-box::before {
+	display: block;
+	content: "";
+	width: 100%;
+	padding-top: calc((9 / 16) * 100%);
+}

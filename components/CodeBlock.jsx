@@ -3,10 +3,10 @@ import Highlight from 'prism-react-renderer';
 import Prism from 'prism-react-renderer/prism';
 import theme from 'prism-react-renderer/themes/nightOwl';
 
-export default function CodeBlock({ children, className }) {
+export default function CodeBlock({ children, className = '' }) {
   const language = className.replace(/language-/, '');
 
-  if (!Prism.languages[language]) {
+  if (!Prism.languages[language] && className !== '') {
     console.warn(`'${language}' syntax highlighting is not available.`);
   }
 

@@ -1,4 +1,4 @@
-const withOptimizedImages = require('next-optimized-images');
+const { withPlugins } = require('next-compose-plugins');
 
 const withVideos = (nextConfig = {}) => ({
   ...nextConfig,
@@ -35,7 +35,7 @@ const markdownLoader = (nextConfig = {}) => ({
   webpack(config, options) {
     config.module.rules.push({
       test: /\.mdx?$/,
-      use: ['raw-loader', 'extract-loader', './mdx-file-loader'],
+      use: ['raw-loader'],
     });
 
     if (typeof nextConfig.webpack === 'function') {
@@ -46,58 +46,75 @@ const markdownLoader = (nextConfig = {}) => ({
   },
 });
 
-module.exports = withVideos(withOptimizedImages({
-  ...markdownLoader({
-    i18n: {
-      locales: ['en', 'fr', 'ja', 'br'],
-      defaultLocale: 'en',
-      localeDetection: false,
-    },
+const imageLoader = (nextConfig = {}) => ({
+  ...nextConfig,
+  webpack: (config, options) => {
+    config.module.rules.push({
+      test: /\.(svg|png|jpe?g|gif)$/i,
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            publicPath: '/_next',
+            name: 'static/media/[name].[hash].[ext]',
+          },
+        },
+      ],
+    });
 
-    // doesn't seem to work for now
-    // async redirects() {
-    //   return [
-    //     {
-    //       source: '/en',
-    //       destination: '/',
-    //       permanent: true,
-    //     },
-    //     {
-    //       source: '/en/:slug*',
-    //       destination: '/:slug*',
-    //       permanent: true,
-    //     },
-    //   ];
-    // },
+    if (typeof nextConfig.webpack === 'function') {
+      return nextConfig.webpack(config, options);
+    }
 
-    pageExtensions: ['js', 'jsx', 'md', 'mdx'],
-    trailingSlash: true,
-
-    target: 'serverless',
-    webpack(config, { dev, isServer }) {
-      config.node = { fs: 'empty' };
-      if (!dev && isServer) {
-        const originalEntry = config.entry;
-
-        config.entry = async () => {
-          const entries = { ...(await originalEntry()) };
-
-          // These scripts can import components from the app and use ES modules
-          entries['./scripts/generate-sitemap.js'] = './scripts/generate-sitemap.js';
-          // entries['./scripts/build-rss.js'] = './scripts/build-rss.js';
-
-          return entries;
-        };
-      }
-
-      return config;
-    },
-  }),
-  optimizeImagesInDev: true,
-  defaultImageLoader: 'responsive-loader',
-  responsive: {
-    sizes: [320, 640, 960, 1200, 1800, 2400],
-    placeholder: true,
-    placeholderSize: 20,
+    return config;
   },
-}));
+});
+
+module.exports = withPlugins([[imageLoader], [withVideos], [markdownLoader]], {
+  i18n: {
+    locales: ['en', 'fr', 'ja', 'br'],
+    defaultLocale: 'en',
+    localeDetection: false,
+  },
+
+  // doesn't seem to work for now
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/en',
+  //       destination: '/',
+  //       permanent: true,
+  //     },
+  //     {
+  //       source: '/en/:slug*',
+  //       destination: '/:slug*',
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
+
+  pageExtensions: ['js', 'jsx', 'md', 'mdx'],
+  trailingSlash: true,
+
+  target: 'serverless',
+  webpack(config, { dev, isServer }) {
+    config.node = { fs: 'empty' };
+
+    if (!dev && isServer) {
+      const originalEntry = config.entry;
+
+      config.entry = async () => {
+        const entries = { ...(await originalEntry()) };
+
+        // These scripts can import components from the app and use ES modules
+        entries['./scripts/generate-sitemap.js'] =
+          './scripts/generate-sitemap.js';
+        // entries['./scripts/build-rss.js'] = './scripts/build-rss.js';
+
+        return entries;
+      };
+    }
+
+    return config;
+  },
+});

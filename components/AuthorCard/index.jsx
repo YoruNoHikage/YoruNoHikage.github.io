@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export default function AuthorCard({
   name,
@@ -9,7 +10,7 @@ export default function AuthorCard({
 }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <img
+      <Image
         style={{ marginRight: '20px' }}
         src={avatar}
         width="75"

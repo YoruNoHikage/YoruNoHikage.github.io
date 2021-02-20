@@ -1,36 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import glob from 'glob';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import hydrate from 'next-mdx-remote/hydrate'
+import hydrate from 'next-mdx-remote/hydrate';
 import renderToString from 'next-mdx-remote/render-to-string';
 import matter from 'gray-matter';
 
 import AuthorCard from '../components/AuthorCard';
-import avatar from '../images/yorunohikage.png';
-import CodeBlock from '../components/CodeBlock';
-import Gallery from '../components/Gallery';
-import Video from '../components/Video';
-import YouTube from 'react-youtube';
-import { TwitterTweetEmbed as Tweet } from 'react-twitter-embed';
 
-const components = {
-  pre: props => <div {...props} />,
-  code: CodeBlock,
-  Gallery,
-  Video,
-  YouTube,
-  Tweet,
-};
+const components = (slug) => ({
+  pre: (props) => <div {...props} />,
+  code: dynamic(() => import('../components/CodeBlock')),
+  Gallery: dynamic(() => import('../components/Gallery')),
+  Video: dynamic(() => import('../components/Video')),
+  YouTube: dynamic(() => import('react-youtube')),
+  Tweet: dynamic(() =>
+    import('react-twitter-embed').then((mod) => mod.TwitterTweetEmbed)
+  ),
+  img: ({ src, alt }) => {
+    // for now, webpack doesn't support magic comments with require
+    // so we need to use import instead, but it's asynchronous
+    // so let's do a useState instead even though it is kinda overkill
+    const [importedSrc, setImportedSrc] = useState(src);
+
+    if (src.startsWith('http')) return <img src={src} alt={alt} />;
+
+    try {
+      import(
+        /* webpackInclude: /\.(svg|png|jpe?g|gif)$/ */
+        /* webpackMode: "eager" */
+        '../articles/' + slug + '/' + src
+      ).then((mod) => setImportedSrc(mod.default));
+    } catch (err) {
+      console.error(`Error loading image '../articles/${slug}/${src}'`, err);
+    }
+
+    // TODO: better way to scale image
+    return (
+      <div className="aspect-ratio-box" style={{ position: 'relative' }}>
+        <Image src={importedSrc} alt={alt} layout="fill" />
+      </div>
+    );
+  },
+});
 
 const baseUrl = 'https://blog.yorunohikage.fr';
 
-const getAbsoluteURL = (lang, path) =>
-  `https://blog.yorunohikage.fr/${lang !== 'en' ? lang + '/' : ''}${path}`;
+const getAbsoluteURL = (lang, slug) =>
+  `https://blog.yorunohikage.fr/${lang !== 'en' ? lang + '/' : ''}${slug}`;
 
 export default function Article({
   title,
+  slug,
   path,
   date,
   ogImage,
@@ -51,16 +75,16 @@ export default function Article({
 
   if (redirectToLang) {
     // doesn't seem to work with the locale option
-    if (typeof window !== 'undefined') replace(`/${redirectToLang}/${path}`);
+    if (typeof window !== 'undefined') replace(`/${redirectToLang}/${slug}`);
 
     return (
       <Head>
-        <meta httpEquiv="refresh" href={`0;url=/${redirectToLang}/${path}`} />
+        <meta httpEquiv="refresh" href={`0;url=/${redirectToLang}/${slug}`} />
       </Head>
     );
   }
 
-  const content = hydrate(source, { components });
+  const content = hydrate(source, { components: components(path) });
 
   return (
     <div>
@@ -69,24 +93,27 @@ export default function Article({
 
         {otherLangs.length > 0 &&
           [lang, ...otherLangs].map((l) => (
-            <link rel="alternate" hrefLang={l} href={getAbsoluteURL(l, path)} />
+            <link rel="alternate" hrefLang={l} href={getAbsoluteURL(l, slug)} />
           ))}
 
-        <meta property="og:locale" content={getAbsoluteURL(lang, path)} />
+        <meta property="og:locale" content={getAbsoluteURL(lang, slug)} />
         {otherLangs.map((l) => (
           <meta
             property="og:locale:alternate"
-            content={getAbsoluteURL(l, path)}
+            content={getAbsoluteURL(l, slug)}
           />
         ))}
 
         <meta property="og:title" content={title} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={getAbsoluteURL(lang, path)} />
+        <meta property="og:url" content={getAbsoluteURL(lang, slug)} />
         {ogImage && <meta property="og:image" content={baseUrl + ogImage} />}
         {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
 
-        <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+        <meta
+          name="twitter:card"
+          content={ogImage ? 'summary_large_image' : 'summary'}
+        />
         {ogImage && <meta name="twitter:image" content={baseUrl + ogImage} />}
         {ogImageAlt && <meta name="twitter:image:alt" content={ogImageAlt} />}
       </Head>
@@ -99,11 +126,7 @@ export default function Article({
         {otherLangs.length > 0 && (
           <div className="lang-selector">
             {otherLangs.map((l) => (
-              <Link
-                href="/[...slug]"
-                href={'/' + path}
-                locale={l}
-              >
+              <Link href="/[...slug]" href={'/' + slug} locale={l}>
                 <a hrefLang={l}>{l}</a>
               </Link>
             ))}
@@ -130,7 +153,7 @@ export default function Article({
           <AuthorCard
             name="Alexis Launay"
             username="YoruNoHikage"
-            avatar={avatar}
+            avatar="/images/yorunohikage.png"
             twitterLink="https://twitter.com/YoruNoHikage"
           >
             Pop punk web developer indie game curious guy!
@@ -152,28 +175,41 @@ export async function getStaticProps({ defaultLocale, locale, params }) {
   });
 
   // redirect
-  if (locale === defaultLocale && !articles.includes('index.md') && !articles.includes('index.mdx')) {
+  if (
+    locale === defaultLocale &&
+    !articles.includes('index.md') &&
+    !articles.includes('index.mdx')
+  ) {
     const redirectToLang = articles[0].match(/index\.(.+)\.mdx?/)[1];
     return { props: { redirectToLang, path } };
   }
 
   const otherLangs = articles
     .map((path) =>
-      path.includes('index.md') ? defaultLocale : path.match(/index\.(.+)\.mdx?/)[1]
+      path.includes('index.md')
+        ? defaultLocale
+        : path.match(/index\.(.+)\.mdx?/)[1]
     )
     .filter((otherLang) => otherLang !== locale);
 
-  const isMDX = articles.includes(`index${locale === 'en' ? '' : '.' + locale}.mdx`);
+  const isMDX = articles.includes(
+    `index${locale === 'en' ? '' : '.' + locale}.mdx`
+  );
 
   try {
     const { default: fileContent } = await import(
-      `../articles/${articleSlug}/index${locale === defaultLocale ? '' : '.' + locale}.${isMDX ? 'mdx' : 'md'}`
+      `../articles/${articleSlug}/index${
+        locale === defaultLocale ? '' : '.' + locale
+      }.${isMDX ? 'mdx' : 'md'}`
     );
 
     let firstImage, firstImageAlt;
     const { content: source, data } = matter(fileContent);
 
-    const content = await renderToString(source, { components, scope: data });
+    const content = await renderToString(source, {
+      components: components(articleSlug),
+      scope: data,
+    });
 
     // match the first image in the document
     // const [, firstImage, firstImageAlt] = content.match(/<img[^>]+src="([^"]+)"[^>]+alt="([^"]+)"/i) || [];
@@ -183,7 +219,8 @@ export async function getStaticProps({ defaultLocale, locale, params }) {
         ...data,
         ogImage: data.cover || firstImage || null,
         ogImageAlt: data.coverAlt || firstImageAlt || null,
-        path,
+        slug: path,
+        path: articleSlug,
         content,
         lang: locale,
         otherLangs,
@@ -214,7 +251,7 @@ export async function getStaticPaths() {
     if (articles.length === 0) continue;
 
     // pushing default lang path
-    paths.push({params: {slug: arraySlug}, locale: 'en'});
+    paths.push({ params: { slug: arraySlug }, locale: 'en' });
 
     if (articles.includes('index.mdx')) {
       articles.splice(articles.indexOf('index.mdx'), 1);
@@ -223,9 +260,9 @@ export async function getStaticPaths() {
     }
 
     for (let article of articles) {
-      const lang = article.match(/.*index\.(.+)\.md/)[1];
+      const lang = article.match(/.*index\.(.+)\.mdx?/)[1];
 
-      paths.push({params: {slug: arraySlug}, locale: lang});
+      paths.push({ params: { slug: arraySlug }, locale: lang });
     }
   }
 

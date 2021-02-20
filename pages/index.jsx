@@ -1,26 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import glob from 'glob';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
 import matter from 'gray-matter';
 import hydrate from 'next-mdx-remote/hydrate';
 import renderToString from 'next-mdx-remote/render-to-string';
 
 import Sidebar from '../components/Sidebar';
-import CodeBlock from '../components/CodeBlock';
-import Gallery from '../components/Gallery';
-import Video from '../components/Video';
-import YouTube from 'react-youtube';
-import { TwitterTweetEmbed as Tweet } from 'react-twitter-embed';
 
-const components = {
-  pre: props => <div {...props} />,
-  code: CodeBlock,
-  Gallery,
-  Video,
-  YouTube,
-  Tweet,
-};
+const components = (slug) => ({
+  pre: (props) => <div {...props} />,
+  code: dynamic(() => import('../components/CodeBlock')),
+  Gallery: dynamic(() => import('../components/Gallery')),
+  Video: dynamic(() => import('../components/Video')),
+  YouTube: dynamic(() => import('react-youtube')),
+  Tweet: dynamic(() =>
+    import('react-twitter-embed').then((mod) => mod.TwitterTweetEmbed)
+  ),
+  img: ({ src, alt }) => {
+    // for now, webpack doesn't support magic comments with require
+    // so we need to use import instead, but it's asynchronous
+    // so let's do a useState instead even though it is kinda overkill
+    const [importedSrc, setImportedSrc] = useState(src);
+
+    if (src.startsWith('http')) return <img src={src} alt={alt} />;
+
+    try {
+      import(
+        /* webpackInclude: /\.(svg|png|jpe?g|gif)$/ */
+        /* webpackMode: "eager" */
+        '../articles/' + slug + '/' + src
+      ).then((mod) => setImportedSrc(mod.default));
+    } catch (err) {
+      console.error(`Error loading image '../articles/${slug}/${src}'`, err);
+    }
+
+    // TODO: better way to scale image
+    return (
+      <div className="aspect-ratio-box" style={{ position: 'relative' }}>
+        <Image src={importedSrc} alt={alt} layout="fill" />
+      </div>
+    );
+  },
+});
 
 export default function Home({ articles, featuredArticles }) {
   return (
@@ -42,11 +66,14 @@ export default function Home({ articles, featuredArticles }) {
                   category,
                   categories = [],
                   slug,
+                  path,
                   lang,
                   otherLangs,
                 } = article;
 
-                const content = hydrate(source, { components });
+                const content = hydrate(source, {
+                  components: components(path),
+                });
 
                 return (
                   <div className="blog-post" key={slug}>
@@ -56,7 +83,13 @@ export default function Home({ articles, featuredArticles }) {
                         month: 'long',
                       })}
                     </time>
-                    <ul style={{ display: 'inline-block', margin: '0', padding: '0' }}>
+                    <ul
+                      style={{
+                        display: 'inline-block',
+                        margin: '0',
+                        padding: '0',
+                      }}
+                    >
                       {categories.map((category) => (
                         <li key={category} className="blog-category">
                           {category}
@@ -72,7 +105,10 @@ export default function Home({ articles, featuredArticles }) {
                       }}
                     >
                       {otherLangs.map((l) => (
-                        <li key={l} style={{ display: 'inline', margin: '0 5px' }}>
+                        <li
+                          key={l}
+                          style={{ display: 'inline', margin: '0 5px' }}
+                        >
                           <Link href="/[...slug]" as={`/${slug}`} locale={l}>
                             <a hrefLang={l}>[{l}]</a>
                           </Link>
@@ -84,9 +120,7 @@ export default function Home({ articles, featuredArticles }) {
                         <a>{title}</a>
                       </Link>
                     </h2>
-                    <div lang={lang}>
-                      {content}
-                    </div>
+                    <div lang={lang}>{content}</div>
                   </div>
                 );
               })}
@@ -130,7 +164,10 @@ export default function Home({ articles, featuredArticles }) {
                       }}
                     >
                       {otherLangs.map((l) => (
-                        <li key={l} style={{ display: 'inline', margin: '0 5px' }}>
+                        <li
+                          key={l}
+                          style={{ display: 'inline', margin: '0 5px' }}
+                        >
                           <Link href="/[...slug]" as={`/${slug}`} locale={l}>
                             <a hrefLang={l}>[{l}]</a>
                           </Link>
@@ -144,11 +181,7 @@ export default function Home({ articles, featuredArticles }) {
                         marginLeft: '5px',
                       }}
                     >
-                      <Link
-                        href="/[...slug]"
-                        as={'/' + slug}
-                        locale={lang}
-                      >
+                      <Link href="/[...slug]" as={'/' + slug} locale={lang}>
                         <a style={{ borderBottom: 'none' }}>
                           {lang !== 'en' && `[${lang}] `}
                           {title}
@@ -210,31 +243,35 @@ export async function getStaticProps({ defaultLocale, locale }) {
     let data, content, source;
 
     try {
-      const {default: fileContent} = await import(`../articles/${dirName}/${filename}`);
+      const { default: fileContent } = await import(
+        `../articles/${dirName}/${filename}`
+      );
 
       ({ content: source, data } = matter(fileContent));
 
       // prevent building article if we're not going to display it anyway
       if (featuredArticles.length <= 5) {
-        content = await renderToString(source, { components });
+        content = await renderToString(source, {
+          components: components(dirName),
+        });
 
         featuredArticles.push({
           ...data,
           slug,
+          path: dirName,
           content,
           lang,
           otherLangs,
         });
-      }
-      else {
+      } else {
         articles.push({
           ...data,
           slug,
+          path: dirName,
           lang,
           otherLangs,
         });
       }
-
     } catch (err) {
       console.log('Error when importing article', err);
       continue;

@@ -1,10 +1,10 @@
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import Nav from '../Nav';
 import SiteLinks from '../SiteLinks';
-import avatar from '../../images/yorunohikage.png';
 
 export default function Sidebar() {
   const router = useRouter();
@@ -30,8 +30,8 @@ export default function Sidebar() {
                   outline: 'none',
                 }}
               >
-                <img
-                  src={avatar}
+                <Image
+                  src="/images/yorunohikage.png"
                   width="75"
                   height="75"
                   alt="Profile picture of the author"

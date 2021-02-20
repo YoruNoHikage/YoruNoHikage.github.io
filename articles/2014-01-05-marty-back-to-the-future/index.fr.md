@@ -10,9 +10,6 @@ categories:
   - Drawing
 format: image
 ---
-_Je scannerai le dessin pour le re-poster en meilleure qualité !_
+![Marty !](https://pbs.twimg.com/media/BdK8R1UIEAAxgI-.jpg:large)
 
-<figure style="width: 1024px" class="wp-caption aligncenter">
-  <img alt="Marty !" src="https://pbs.twimg.com/media/BdK8R1UIEAAxgI-.jpg:large" width="1024" height="1365" />
-  <figcaption class="wp-caption-text">Dessin fait en une soirée.</figcaption>
-</figure>
+Dessin fait en une soirée.
