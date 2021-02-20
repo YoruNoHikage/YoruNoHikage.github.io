@@ -4,8 +4,9 @@
 .blog-post:last-child {
 	margin-bottom: 10px;
 }
-.blog-post > h2 {
+.blog-post h1 {
 	margin-top: 10px;
+	font-size: 32px;
 }
 .blog-post time {
 	font-size: 14px;

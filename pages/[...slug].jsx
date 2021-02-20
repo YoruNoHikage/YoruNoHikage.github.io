@@ -93,7 +93,7 @@ export default function Article({
 
         {otherLangs.length > 0 &&
           [lang, ...otherLangs].map((l) => (
-            <link rel="alternate" hrefLang={l} href={getAbsoluteURL(l, slug)} />
+            <link key={l} rel="alternate" hrefLang={l} href={getAbsoluteURL(l, slug)} />
           ))}
 
         <meta property="og:locale" content={getAbsoluteURL(lang, slug)} />
@@ -134,8 +134,8 @@ export default function Article({
         )}
       </div>
 
-      <div className="blog-single">
-        <div className="text" lang={lang}>
+      <article className="blog-single" lang={lang}>
+        <header>
           <h1>{title}</h1>
           <em style={dateStyle}>
             <time dateTime={date}>
@@ -146,10 +146,10 @@ export default function Article({
               })}
             </time>
           </em>
-          {content}
-        </div>
-        <hr />
-        <div className="footer">
+        </header>
+        {content}
+        <footer className="footer" lang="en">
+          <hr />
           <AuthorCard
             name="Alexis Launay"
             username="YoruNoHikage"
@@ -158,8 +158,8 @@ export default function Article({
           >
             Pop punk web developer indie game curious guy!
           </AuthorCard>
-        </div>
-      </div>
+        </footer>
+      </article>
     </div>
   );
 }

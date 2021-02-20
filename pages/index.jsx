@@ -76,52 +76,54 @@ export default function Home({ articles, featuredArticles }) {
                 });
 
                 return (
-                  <div className="blog-post" key={slug}>
-                    <time dateTime={datePublished}>
-                      {new Date(datePublished).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                      })}
-                    </time>
-                    <ul
-                      style={{
-                        display: 'inline-block',
-                        margin: '0',
-                        padding: '0',
-                      }}
-                    >
-                      {categories.map((category) => (
-                        <li key={category} className="blog-category">
-                          {category}
-                        </li>
-                      ))}
-                    </ul>
-                    <ul
-                      style={{
-                        padding: '0',
-                        margin: '5px 0',
-                        listStyle: 'none',
-                        float: 'right',
-                      }}
-                    >
-                      {otherLangs.map((l) => (
-                        <li
-                          key={l}
-                          style={{ display: 'inline', margin: '0 5px' }}
-                        >
-                          <Link href="/[...slug]" as={`/${slug}`} locale={l}>
-                            <a hrefLang={l}>[{l}]</a>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                    <h2>
-                      <Link href="/[...slug]" as={'/' + slug} locale={lang}>
-                        <a>{title}</a>
-                      </Link>
-                    </h2>
-                    <div lang={lang}>{content}</div>
-                  </div>
+                  <article className="blog-post" key={slug} lang={lang}>
+                    <header>
+                      <time dateTime={datePublished}>
+                        {new Date(datePublished).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                        })}
+                      </time>
+                      <ul
+                        style={{
+                          display: 'inline-block',
+                          margin: '0',
+                          padding: '0',
+                        }}
+                      >
+                        {categories.map((category) => (
+                          <li key={category} className="blog-category">
+                            {category}
+                          </li>
+                        ))}
+                      </ul>
+                      <ul
+                        style={{
+                          padding: '0',
+                          margin: '5px 0',
+                          listStyle: 'none',
+                          float: 'right',
+                        }}
+                      >
+                        {otherLangs.map((l) => (
+                          <li
+                            key={l}
+                            style={{ display: 'inline', margin: '0 5px' }}
+                          >
+                            <Link href="/[...slug]" as={`/${slug}`} locale={l}>
+                              <a hrefLang={l}>[{l}]</a>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                      <h1>
+                        <Link href="/[...slug]" as={'/' + slug} locale={lang}>
+                          <a>{title}</a>
+                        </Link>
+                      </h1>
+                    </header>
+                    {content}
+                  </article>
                 );
               })}
 
@@ -139,7 +141,7 @@ export default function Home({ articles, featuredArticles }) {
                 category && categories.push(category);
 
                 return (
-                  <div
+                  <article
                     key={slug}
                     className="blog-post"
                     style={{
@@ -149,46 +151,48 @@ export default function Home({ articles, featuredArticles }) {
                       textOverflow: 'ellipsis',
                     }}
                   >
-                    <time dateTime={datePublished}>
-                      {new Date(datePublished).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                      })}
-                    </time>
-                    <ul
-                      style={{
-                        padding: '0',
-                        margin: '0',
-                        listStyle: 'none',
-                        float: 'right',
-                      }}
-                    >
-                      {otherLangs.map((l) => (
-                        <li
-                          key={l}
-                          style={{ display: 'inline', margin: '0 5px' }}
-                        >
-                          <Link href="/[...slug]" as={`/${slug}`} locale={l}>
-                            <a hrefLang={l}>[{l}]</a>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                    <h2
-                      style={{
-                        display: 'inline',
-                        fontSize: '16px',
-                        marginLeft: '5px',
-                      }}
-                    >
-                      <Link href="/[...slug]" as={'/' + slug} locale={lang}>
-                        <a style={{ borderBottom: 'none' }}>
-                          {lang !== 'en' && `[${lang}] `}
-                          {title}
-                        </a>
-                      </Link>
-                    </h2>
-                  </div>
+                    <header>
+                      <time dateTime={datePublished}>
+                        {new Date(datePublished).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                        })}
+                      </time>
+                      <ul
+                        style={{
+                          padding: '0',
+                          margin: '0',
+                          listStyle: 'none',
+                          float: 'right',
+                        }}
+                      >
+                        {otherLangs.map((l) => (
+                          <li
+                            key={l}
+                            style={{ display: 'inline', margin: '0 5px' }}
+                          >
+                            <Link href="/[...slug]" as={`/${slug}`} locale={l}>
+                              <a hrefLang={l}>[{l}]</a>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                      <h1
+                        style={{
+                          display: 'inline',
+                          fontSize: '16px',
+                          marginLeft: '5px',
+                        }}
+                      >
+                        <Link href="/[...slug]" as={'/' + slug} locale={lang}>
+                          <a style={{ borderBottom: 'none' }}>
+                            {lang !== 'en' && `[${lang}] `}
+                            {title}
+                          </a>
+                        </Link>
+                      </h1>
+                    </header>
+                  </article>
                 );
               })}
             </div>
