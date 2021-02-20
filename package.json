@@ -4,7 +4,7 @@
   "description": "YoruNoHikage's blog",
   "scripts": {
     "build": "next build && yarn build:sitemap",
-    "build:sitemap": "node ./.next/serverless/scripts/generate-sitemap.js",
+    "build:sitemap": "node ./.next/server/scripts/generate-sitemap.js",
     "dev": "next",
     "start": "next start"
   },

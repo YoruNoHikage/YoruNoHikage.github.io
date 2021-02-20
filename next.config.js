@@ -96,7 +96,6 @@ module.exports = withPlugins([[imageLoader], [withVideos], [markdownLoader]], {
   pageExtensions: ['js', 'jsx', 'md', 'mdx'],
   trailingSlash: true,
 
-  target: 'serverless',
   webpack(config, { dev, isServer }) {
     config.node = { fs: 'empty' };
 
