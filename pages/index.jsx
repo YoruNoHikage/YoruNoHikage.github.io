@@ -20,19 +20,14 @@ const components = (slug) => ({
     import('react-twitter-embed').then((mod) => mod.TwitterTweetEmbed)
   ),
   img: ({ src, alt }) => {
-    // for now, webpack doesn't support magic comments with require
-    // so we need to use import instead, but it's asynchronous
-    // so let's do a useState instead even though it is kinda overkill
-    const [importedSrc, setImportedSrc] = useState(src);
-
     if (src.startsWith('http')) return <img src={src} alt={alt} />;
 
+    let importedSrc = '';
+
     try {
-      import(
-        /* webpackInclude: /\.(svg|png|jpe?g|gif)$/ */
-        /* webpackMode: "eager" */
-        '../articles/' + slug + '/' + src
-      ).then((mod) => setImportedSrc(mod.default));
+      const getImages = require.context('../articles/', true, /\.(svg|png|jpe?g|gif)$/);
+
+      importedSrc = getImages('./' + slug + '/' + src).default;
     } catch (err) {
       console.error(`Error loading image '../articles/${slug}/${src}'`, err);
     }
