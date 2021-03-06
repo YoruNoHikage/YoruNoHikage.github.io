@@ -5,8 +5,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import hydrate from 'next-mdx-remote/hydrate';
-import renderToString from 'next-mdx-remote/render-to-string';
+import MdxRemote from '../lib/mdx-remote';
 import matter from 'gray-matter';
 
 import AuthorCard from '../components/AuthorCard';
@@ -20,8 +19,23 @@ const components = (slug) => ({
   Tweet: dynamic(() =>
     import('react-twitter-embed').then((mod) => mod.TwitterTweetEmbed)
   ),
-  img: ({ src, alt }) => {
-    if (src.startsWith('http')) return <img src={src} alt={alt} />;
+  source: ({ src, ...props }) => {
+    if (src.startsWith('http')) return <source src={src} />;
+
+    let importedSrc = '';
+
+    try {
+      const getVideoSrc = require.context('../articles/', true, /\.(mp4|webm)$/);
+
+      importedSrc = getVideoSrc('./' + slug + '/' + src).default;
+    } catch (err) {
+      console.error(`Error loading video '../articles/${slug}/${src}'`, err);
+    }
+
+    return <source {...props} src={importedSrc} />;
+  },
+  img: ({ src, ...props }) => {
+    if (src.startsWith('http')) return <img {...props} />;
 
     let importedSrc = '';
 
@@ -35,9 +49,10 @@ const components = (slug) => ({
 
     // TODO: better way to scale image
     return (
-      <div className="aspect-ratio-box" style={{ position: 'relative' }}>
-        <Image src={importedSrc} alt={alt} layout="fill" />
-      </div>
+      // <div className="aspect-ratio-box" style={{ position: 'relative' }}>
+      //   <Image src={importedSrc} alt={alt} layout="fill" />
+      // </div>
+      <img {...props} src={importedSrc} />
     );
   },
 });
@@ -79,8 +94,6 @@ export default function Article({
     );
   }
 
-  const content = hydrate(source, { components: components(path) });
-
   return (
     <div>
       <Head>
@@ -102,7 +115,7 @@ export default function Article({
         <meta property="og:title" content={title} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={getAbsoluteURL(lang, slug)} />
-        {ogImage && <meta property="og:image" content={baseUrl + ogImage} />}
+        {ogImage && <meta property="og:image" content={baseUrl + '/' + ogImage} />}
         {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
 
         <meta
@@ -142,7 +155,7 @@ export default function Article({
             </time>
           </em>
         </header>
-        {content}
+        <MdxRemote source={source} components={components(path)} />
         <footer className="footer" lang="en">
           <hr />
           <AuthorCard
@@ -192,28 +205,17 @@ export async function getStaticProps({ defaultLocale, locale, params }) {
   );
 
   try {
-    const { default: fileContent } = await import(
+    const { default: content, frontMatter: data } = await import(
       `../articles/${articleSlug}/index${
         locale === defaultLocale ? '' : '.' + locale
       }.${isMDX ? 'mdx' : 'md'}`
     );
 
-    let firstImage, firstImageAlt;
-    const { content: source, data } = matter(fileContent);
-
-    const content = await renderToString(source, {
-      components: components(articleSlug),
-      scope: data,
-    });
-
-    // match the first image in the document
-    // const [, firstImage, firstImageAlt] = content.match(/<img[^>]+src="([^"]+)"[^>]+alt="([^"]+)"/i) || [];
-
     return {
       props: {
         ...data,
-        ogImage: data.cover || firstImage || null,
-        ogImageAlt: data.coverAlt || firstImageAlt || null,
+        ogImage: data.cover || null,
+        ogImageAlt: data.coverAlt || null,
         slug: path,
         path: articleSlug,
         content,

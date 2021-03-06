@@ -1,41 +1,11 @@
 const { withPlugins } = require('next-compose-plugins');
 
-const withVideos = (nextConfig = {}) => ({
-  ...nextConfig,
-  webpack(config, options) {
-    const { isServer } = options;
-
-    const prefix = nextConfig.assetPrefix || '';
-    const directory = nextConfig.assetDirectory || 'static';
-
-    config.module.rules.push({
-      test: /\.(mp4|webm|ogg|swf|ogv)$/,
-      use: [
-        {
-          loader: require.resolve('file-loader'),
-          options: {
-            publicPath: `${prefix}/_next/${directory}/videos/`,
-            outputPath: `${isServer ? '../' : ''}${directory}/videos/`,
-            name: '[name]-[hash].[ext]',
-          },
-        },
-      ],
-    });
-
-    if (typeof nextConfig.webpack === 'function') {
-      return nextConfig.webpack(config, options);
-    }
-
-    return config;
-  },
-});
-
 const markdownLoader = (nextConfig = {}) => ({
   ...nextConfig,
   webpack(config, options) {
     config.module.rules.push({
       test: /\.mdx?$/,
-      use: ['raw-loader'],
+      use: ['./mdx-file-loader'],
     });
 
     if (typeof nextConfig.webpack === 'function') {
@@ -46,11 +16,11 @@ const markdownLoader = (nextConfig = {}) => ({
   },
 });
 
-const imageLoader = (nextConfig = {}) => ({
+const mediaLoader = (nextConfig = {}) => ({
   ...nextConfig,
   webpack: (config, options) => {
     config.module.rules.push({
-      test: /\.(svg|png|jpe?g|gif)$/i,
+      test: /\.(svg|png|jpe?g|gif|mp4|webm)$/i,
       use: [
         {
           loader: 'file-loader',
@@ -70,7 +40,7 @@ const imageLoader = (nextConfig = {}) => ({
   },
 });
 
-module.exports = withPlugins([[imageLoader], [withVideos], [markdownLoader]], {
+module.exports = withPlugins([[mediaLoader], [markdownLoader]], {
   i18n: {
     locales: ['en', 'fr', 'ja', 'br'],
     defaultLocale: 'en',

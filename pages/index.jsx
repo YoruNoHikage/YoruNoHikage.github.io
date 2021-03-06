@@ -5,8 +5,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import matter from 'gray-matter';
-import hydrate from 'next-mdx-remote/hydrate';
-import renderToString from 'next-mdx-remote/render-to-string';
+import MdxRemote from '../lib/mdx-remote';
 
 import Sidebar from '../components/Sidebar';
 
@@ -19,8 +18,23 @@ const components = (slug) => ({
   Tweet: dynamic(() =>
     import('react-twitter-embed').then((mod) => mod.TwitterTweetEmbed)
   ),
-  img: ({ src, alt }) => {
-    if (src.startsWith('http')) return <img src={src} alt={alt} />;
+  source: ({ src, ...props }) => {
+    if (src.startsWith('http')) return <source src={src} />;
+
+    let importedSrc = '';
+
+    try {
+      const getVideoSrc = require.context('../articles/', true, /\.(mp4|webm)$/);
+
+      importedSrc = getVideoSrc('./' + slug + '/' + src).default;
+    } catch (err) {
+      console.error(`Error loading video '../articles/${slug}/${src}'`, err);
+    }
+
+    return <source {...props} src={importedSrc} />;
+  },
+  img: ({ src, ...props }) => {
+    if (src.startsWith('http')) return <img {...props} />;
 
     let importedSrc = '';
 
@@ -34,9 +48,10 @@ const components = (slug) => ({
 
     // TODO: better way to scale image
     return (
-      <div className="aspect-ratio-box" style={{ position: 'relative' }}>
-        <Image src={importedSrc} alt={alt} layout="fill" />
-      </div>
+      // <div className="aspect-ratio-box" style={{ position: 'relative' }}>
+      //   <Image src={importedSrc} alt={alt} layout="fill" />
+      // </div>
+      <img {...props} src={importedSrc} />
     );
   },
 });
@@ -65,10 +80,6 @@ export default function Home({ articles, featuredArticles }) {
                   lang,
                   otherLangs,
                 } = article;
-
-                const content = hydrate(source, {
-                  components: components(path),
-                });
 
                 return (
                   <article className="blog-post" key={slug} lang={lang}>
@@ -117,7 +128,7 @@ export default function Home({ articles, featuredArticles }) {
                         </Link>
                       </h1>
                     </header>
-                    {content}
+                    <MdxRemote source={source} components={components(path)} />
                   </article>
                 );
               })}
@@ -239,21 +250,13 @@ export async function getStaticProps({ defaultLocale, locale }) {
       (article) => article.match(/.*index\.(.+)\.mdx?/)[1]
     );
 
-    let data, content, source;
-
     try {
-      const { default: fileContent } = await import(
+      const { default: content, frontMatter: data } = await import(
         `../articles/${dirName}/${filename}`
       );
 
-      ({ content: source, data } = matter(fileContent));
-
       // prevent building article if we're not going to display it anyway
       if (featuredArticles.length <= 5) {
-        content = await renderToString(source, {
-          components: components(dirName),
-        });
-
         featuredArticles.push({
           ...data,
           slug,

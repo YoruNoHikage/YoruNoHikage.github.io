@@ -19,7 +19,6 @@
     "@mdx-js/loader": "^1.6.22",
     "@mdx-js/mdx": "^1.6.22",
     "autoprefixer": "^10.0.1",
-    "babel-plugin-html-attributes-to-jsx": "^1.6.22",
     "eslint": "^7.12.1",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.1",
@@ -38,17 +37,21 @@
     "postcss-flexbugs-fixes": "^4.2.0",
     "postcss-preset-env": "^6.7.0",
     "prism-react-renderer": "^1.1.1",
-    "raw-loader": "^4.0.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-twitter-embed": "^3.0.3",
     "react-typography": "^0.16.19",
     "react-youtube": "^7.13.1",
-    "remark": "^13.0.0",
-    "remark-mdx": "^1.6.22",
     "sitemap": "^6.3.2",
     "typography": "^0.16.19",
-    "typography-theme-ocean-beach": "^0.16.19",
-    "unist-util-visit": "^2.0.3"
+    "typography-theme-ocean-beach": "^0.16.19"
+  },
+  "devDependencies": {
+    "babel-loader": "^8.2.2",
+    "memfs": "^3.2.0",
+    "memory-fs": "^0.5.0",
+    "stringify-object": "^3.3.0",
+    "terser-webpack-plugin": "^4",
+    "webpack": "^4"
   }
 }

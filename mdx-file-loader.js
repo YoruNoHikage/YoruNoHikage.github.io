@@ -1,68 +1,101 @@
-const loaderUtils = require('loader-utils');
+const webpack = require('webpack');
+const matter = require('gray-matter');
+const stringifyObject = require('stringify-object');
+const TerserPlugin = require('terser-webpack-plugin');
+const memfs = require('memfs');
+const joinPath = require('memory-fs/lib/join');
 
-const markdownImageReferencesRE = /(!\[[^\]]*\]\((?!(?:https?:)?\/\/)[^)'"]+(?:\s+["'][^"']*["'])?\))/g;
-const imagePathRE = /^(!\[[^\]]*\]\()((?!(?:https?:)?\/\/)[^)"']+)(\s+["'][^"']*["'])?(\))$/;
+const fs = Object.create(memfs);
+fs.join = joinPath;
 
-const requireReferencesRE = /(require\((?:["'][^"']+["'])?\))/g;
-const requiredFilePathRE = /require\(["']([^"']+)["']?\)/;
+module.exports = async function MDXFileLoader(content, map, meta) {
+  this.async();
 
-// converts the image path in the markdowned-image syntax into a require statement, or stringify the given content
-function requirifyImageReference(markdownImageReference) {
-  const [, mdImageStart, mdImagePath, optionalMdTitle, mdImageEnd] =
-    imagePathRE.exec(markdownImageReference) || [];
-  if (!mdImagePath) {
-    return JSON.stringify(markdownImageReference);
-  } else {
-    const imageRequest = loaderUtils.stringifyRequest(
-      this,
-      loaderUtils.urlToRequest(mdImagePath)
-    );
-    const mdImageTitleAndEnd = optionalMdTitle
-      ? JSON.stringify(optionalMdTitle + mdImageEnd)
-      : JSON.stringify(mdImageEnd);
+  this.addDependency(this.resourcePath);
 
-    return `${JSON.stringify(
-      mdImageStart
-    )} + require(${imageRequest}) + ${mdImageTitleAndEnd}`;
-  }
-}
+  const compiler = webpack({
+    mode: 'production',
+    entry: this.resourcePath,
+    output: {
+      filename: 'article.bundle.js',
+      libraryTarget: 'var',
+      library: 'MDXContent',
+    },
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin()],
+    },
+    resolve: {
+      extensions: ['.md', '.mdx'],
+      alias: {
+        fs: 'memfs',
+      },
+    },
+    module: {
+      rules: [
+        {
+          test: /\.mdx?$/,
+          exclude: /(node_modules|bower_components)/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-react'],
+                configFile: false,
+              },
+            },
+            '@mdx-js/loader',
+            './fm-loader',
+          ],
+        },
+        {
+          test: /\.jsx?$/,
+          exclude: /(node_modules|bower_components)/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-react'],
+                configFile: false,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    externals: {
+      react: 'React',
+      '@mdx-js/react': 'mdxReact',
+    },
+  });
 
-// exports the MarkdownImageLoader loader function
-module.exports = function MDXImageLoader(markdownContent = '') {
-  // the outputs of this loader can be cached
-  this.cacheable && this.cacheable();
+  compiler.outputFileSystem = fs;
 
-  return `
-module.exports = [
-${markdownContent
-  .split(requireReferencesRE)
-  .map((text) => {
-    // if (text.startsWith('require')) {
-    if (text.startsWith("require('./")) {
-      // TODO: prevent matching inside code blocks
-      const [, filepath] = text.match(requiredFilePathRE) || [];
-      const fileRequest = loaderUtils.stringifyRequest(
-        this,
-        loaderUtils.urlToRequest(filepath)
-      );
-
-      return `${JSON.stringify(
-        "'"
-      )} + require(${fileRequest}) + ${JSON.stringify("'")}`;
+  compiler.run((err, stats) => {
+    if (err) {
+      console.error(err);
+      return;
     }
 
-    return text
-      .split(markdownImageReferencesRE)
-      .map(requirifyImageReference)
-      .join(',\n');
-  })
-  .join(',\n')}
-].join('')`;
-};
+    console.log(
+      stats.toString({
+        // chunks: false,
+        colors: true,
+      })
+    );
 
-// exports function and regexp helpers for testability purposes
-module.exports.helpers = {
-  markdownImageReferencesRE,
-  imagePathRE,
-  requirifyImageReference,
+    const { data } = matter(content);
+
+    const code = `
+      export const frontMatter = ${stringifyObject(data)}
+
+      export const raw = ${JSON.stringify(content)}
+
+      export default ${JSON.stringify(
+        stats.compilation.assets['article.bundle.js'].source()
+      )}
+    `;
+
+    this.callback(null, code);
+  });
 };
