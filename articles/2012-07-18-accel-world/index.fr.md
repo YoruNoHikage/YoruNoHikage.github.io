@@ -9,8 +9,6 @@ path: "/2012/07/18/accel-world/"
 categories:
   - Animes
 ---
-[<img class="alignnone size-full wp-image-18" title="Accel World" src="http://yorunohikage.olympe.in/blog/wp-content/uploads/2012/07/accel-world.png" alt="" width="550" height="200" srcset="https://yorunohikage.olympe.in/blog/wp-content/uploads/2012/07/accel-world-300x109.png 300w, https://yorunohikage.olympe.in/blog/wp-content/uploads/2012/07/accel-world.png 550w" sizes="(max-width: 550px) 100vw, 550px" />](http://yorunohikage.olympe.in/blog/wp-content/uploads/2012/07/accel-world.png)
-
 > _**Accel world**_ (アクセル・ワールド) est une light novel écrite par Reki Kawahara et illustrée par HIMA.
 
 Merci Wikipedia, mais aujourd’hui, on va s’intéresser plutôt à l’anime adapté par Sunrise (Gundam, Nicky Larson, Code Geass…) qui est tiré de cette light novel. _J‘inaugure donc ce premier article de la catégorie anime qui a pour but de vous en faire découvrir. Et plutôt que d’énoncer une énième fois des grands classiques comme Bleach, Fullmetal Alchemist et j’en passe, je préfère m’attarder sur les nouveautés et les bonnes découvertes. J’essaierai d’avoir un regard objectif pour d’abord expliquer la trame de l’histoire et les autres composantes mais pour ce qui est de l’avis à la fin de l’article, il est purement personnel, vous pouvez très bien être en désaccord avec moi. Sur ce, commençons !_
@@ -23,4 +21,4 @@ Je me suis lancé dans cet anime sans vraiment le vouloir et j’ai été agréa
 
 L’anime est **disponible en simulcast chez Wakanim**, bien que les premiers épisodes soient devenus payants. Des jeux vidéo sont déjà prévus, surprenant compte tenu de l’âge de la série.
 
-Voilà qui est pour le résumé global et mon avis, j’espère que ça vous a donné envie de connaître cet anime et je vous dis à la prochaine. <img src="https://yorunohikage.olympe.in/blog/wp-includes/images/smilies/simple-smile.png" alt=":)" class="wp-smiley" style="height: 1em; max-height: 1em;" />
+Voilà qui est pour le résumé global et mon avis, j’espère que ça vous a donné envie de connaître cet anime et je vous dis à la prochaine. 🙂
