@@ -1,0 +1,266 @@
+---
+title: 'Dynamically imported components in MDX and Next.js'
+date: '2021-03-06T17:41:00.000Z'
+startedAt: '2020-09-09'
+categories: ['Development']
+ogImage: './og-image.png'
+ogImageAlt: ''
+---
+
+import Counter from './Counter.jsx';
+
+_This article relies on choices I've made when I moved my blog from Gatsby to Next, this could be applied differently in other cases. You might want to check the article about it : [From Gatsby to Next but still static](/2020/05/06/from-gatsby-to-next-but-still-static)._
+
+So here I am, back at over-engineering my blog again like 99% of all developers – yes I'm looking at you. I wouldn't advise doing this except if you like banging your head on your desk every now and then. I've moved my blog to Next.js for a while now and was using exclusively static Markdown for articles. **There is still an article from 2014 – I was using Wordpress at the time – that I need to get back.** It has a gallery with a few embedded pictures embedded. So how can we get that back?
+
+First of all, **you need to know there is another way**. By making a specific article type within your layouts, listing pictures in the frontmatter and using a different template, life would be easier. But as an engineer, I like abstractions and ~I will die because of it~ **there has been a nice thing in town recently allowing you to pimp up your blog's articles. That is MDX.**
+
+## So what is MDX?
+
+**MDX is a syntax enabling the use of JSX within Markdown.** You can then import components and make your blog articles interactive. For example, you might want charts or surveys and while you can embed some HTML in your static Markdown documents, you can't really get all the power that Javascript would give to you.
+
+## Using MDX with Next
+
+Integrating MDX into Next is pretty easy, just use the official `@next/mdx` and `@mdx-js/loader` packages and add this to your `next.config.js`:
+
+```js
+const withMDX = require('@next/mdx')();
+
+module.exports = withMDX();
+```
+
+Just put `.mdx` files in your pages, or import them into your pages just like a regular React component, it works!
+
+Now, you might want features like frontmatter – not supported by default in MDX 1, and 2 is not fully released yet. You can make your own webpack config for that:
+
+```js
+// next.config.js
+
+const markdownLoader = (nextConfig = {}) => ({
+  ...nextConfig,
+  webpack(config, options) {
+    config.module.rules.push({
+      // /\.mdx$/ if you want to only support .mdx files
+      test: /\.mdx?$/,
+      use: [
+        options.defaultLoaders.babel,
+        '@mdx-js/loader',
+        // our custom frontmatter loader
+        path.join(__dirname, './fm-loader'),
+      ],
+    });
+
+    if (typeof nextConfig.webpack === 'function') {
+      return nextConfig.webpack(config, options);
+    }
+
+    return config;
+  },
+});
+```
+
+```js
+// fm-loader.js
+
+const matter = require('gray-matter');
+const stringifyObject = require('stringify-object');
+
+module.exports = async function (src) {
+  const callback = this.async();
+  const { content, data } = matter(src);
+
+  const code = `export const frontMatter = ${stringifyObject(data)}
+
+${content}`;
+
+  return callback(null, code);
+};
+```
+
+This enables MDX files to be imported and treated as components alongside a `frontMatter` export with all the file's data you specified. Pretty easy, there is even [an official blog post about it](https://nextjs.org/blog/markdown).
+
+If all your documents lies within the `pages` structure, you'll get all you need. Just going through the docs would get you a way to personalize the layout and you'd be fine. You can go rest now, forget about it and enjoy your day.
+
+But.
+
+If you want to dynamically import your files, you'll notice all you get is a ready-to-be-rendered component.
+
+**Problem: Next.js needs serializable content in `getStaticProps`.**
+
+With static Markdown, we used to get the raw content and give it as-is to Next.js, rendering it within the component. How could we do the same with a component-like document. We need serialization.
+
+## 1st workaround: loading content as we render
+
+As we can't serialize our content, we will remove this property and instead loading it dynamically when the page is rendered. Everything dynamic about your components in your MDX will get mounted afterwards, but you will get a static version first. That's it, no?
+
+```jsx
+import dynamic from 'next/dynamic';
+
+export default function Article({ folder, /* ... */}) {
+
+  const Content =
+    dynamic(() => import(`../articles/${folder}/index.mdx`));
+
+  return (
+    <Layout>
+      <Content />
+    </Layout>
+  )
+}
+
+export function getStaticProps() {
+  // ...
+
+  const { default: content, data } = await import(
+    `../articles/${folder}/index.mdx`
+  );
+
+  // return data but not content
+}
+```
+
+**When dynamically loading a path, webpack bundles everything it finds** that could match the path. You could use things like magic comments to narrow down the files imported but you'd still get every single article reference bundled within the page. **What we want is just having a pre-rendered static version of the article and a reference to the dynamic version of it.**
+
+## 2nd workaround : using next-mdx-remote
+
+By the time, I started exploring a solution for this (half a year ago), I stumbled upon [`next-mdx-enhanced`](https://github.com/hashicorp/next-mdx-enhanced) and [`next-mdx-remote`](https://github.com/hashicorp/next-mdx-remote) that target exactly what I enunciated before. The latter gets the content, render a static version and hydrate it back during render.
+
+```jsx
+import renderToString from 'next-mdx-remote/render-to-string';
+import hydrate from 'next-mdx-remote/hydrate';
+
+import Test from '../components/test';
+
+const components = { Test };
+
+export default function Article({ source }) {
+  const content = hydrate(source, { components });
+
+  return <div className="wrapper">{content}</div>;
+}
+
+export async function getStaticProps() {
+  // ...
+
+  const { default: source, data } = await import(
+    `../articles/${folder}/index.mdx`
+  );
+
+  const mdxSource = await renderToString(source, { components });
+
+  return { props: { data, source: mdxSource } };
+}
+```
+
+Here, we can keep our frontmatter loader, but we need to drop anything else. We get the source and give it to `renderToString`. It does a little bit of magic and gives you back a serialized version you can render both server-side and client-side. You can also provide global components that gets rendered with every document (it works with `next/dynamic` too!). If you want to explore this solution, there's an [official example within Next.js's repo](https://github.com/vercel/next.js/tree/canary/examples/with-mdx-remote).
+
+Recently, **an interesting PR got submitted:** [Refactor hydrate and renderToString](https://github.com/hashicorp/next-mdx-remote/pull/39). It greatly simplifies the internals and provides a great component interface instead of the hydrate function above. It's not ground-breaking but it's always nice to get a simplied API.
+
+But there's still a downside with this library though. **Imports are not supported within the MDX document.**
+
+The thing is, when you look at the code, nothing magic is happening really. The document is just processed through the MDX compiler and babel. I've researched and explored some solutions with plugins for those but nothing came with success.
+
+## 3rd and last workaround : let's make a webpack bundle instead
+
+This solution, even though very complex, is what appeared to me as being the only way to make everything works as I wanted. When you think of it, webpack already does a great job loading serialized bundle chunks and executing them at the right time.
+
+_Why couldn't we hydrate a webpack JS bundle the same way `next-mdx-remote` does it for a raw transformed script?_ That's how I got into the troubles of rendering a webpack bundle within Next's webpack process. Maybe you could do this in one go with plugins, but my lack of experience with them and webpack's core makes it difficult for me.
+
+So what does the process looks like when dynamically importing an article?
+
+```js
+// mdx-file-loader.js
+
+const webpack = require('webpack');
+const matter = require('gray-matter');
+const stringifyObject = require('stringify-object');
+
+module.exports = async function MDXFileLoader(content) {
+  this.async();
+
+  // let's compile a webpack bundle inside a webpack loader !
+  const compiler = webpack({
+    // the entry is the path to the content
+    entry: this.resourcePath,
+    output: {
+      filename: 'article.bundle.js',
+      libraryTarget: 'var',
+      library: 'MDXContent',
+    },
+    resolve: {
+      extensions: ['.md', '.mdx'],
+    },
+    module: {
+      rules: [
+        { test: /\.mdx?$/,
+          use: ['babel-loader', '@mdx-js/loader'] },
+        { test: /\.jsx?$/, use: ['babel-loader'] },
+      ],
+    },
+    externals: {
+      react: 'React',
+      '@mdx-js/react': 'mdxReact',
+    },
+  });
+
+  compiler.run((err, stats) => {
+    const { data } = matter(content);
+
+    const code = `
+      export const frontMatter = ${stringifyObject(data)}
+
+      export default ${JSON.stringify(
+        // catch the result in stats and export it as a string
+        stats.compilation.assets['article.bundle.js'].source()
+      )}
+    `;
+
+    this.callback(null, code);
+  });
+};
+```
+
+The code here is a bit simplified, the full version involves the use of a memory filesystem to avoid writing on the disk. I'm not sure how yet, but I think it'd be better if we could process the content coming into the loader instead. There might be a need to check how to make the virtual and the real filesystem work together for imports.
+
+```jsx
+import MdxRemote from '../lib/MdxRemote';
+
+import Test from '../components/test';
+
+const components = { Test };
+
+export default function Article({ source }) {
+  return <MdxRemote source={source} components={components} />;
+}
+
+export async function getStaticProps() {
+  // ...
+
+  const { default: source, data } = await import(
+    `../articles/${folder}/index.mdx`
+  );
+
+  return { props: { data, source } };
+}
+```
+
+1. It goes through a **custom loader handling what we locally require** (local components, images...)
+2. It **compiles a raw bundle** for it
+3. It **gets back in Next.js's `getStaticProps`** and returned as a prop.
+4. It's **hydrated** the same way as `next-mdx-remote`'s new PR.
+
+Frankly, this is very experimental but I don't see how we could not get this as a behavior built in Next.js directly. For now, what we require locally is pretty much isolated from the rest of your app, so be careful when importing libraries.
+
+With my limited experience with webpack, the next steps could be reducing the article's bundle size, minification and optimization and also sharing some webpack config with Next's.
+
+## Demo time!
+
+Finally, it works! You can try disabling Javascript to see what's displaying here in lieu of the interactive component:
+
+<Counter />
+
+## The job is done
+
+Sure, everything works but it raises some leads to future improvements and built-in solutions. Next.js already does a lot with its own webpack magic and **with some kind of special API, it could paves the way to more and more dynamic parts being prepared during the static generation and rendered at will**. What matters is a way to specify which page will require which dynamic component and we could get something optimized per each page.
+
+You might want to subscribe to this issue to stay informed if anything progresses in that direction: [Import MDX components dynamically](https://github.com/vercel/next.js/discussions/12151).
