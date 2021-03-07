@@ -115,14 +115,14 @@ export default function Article({
         <meta property="og:title" content={title} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={getAbsoluteURL(lang, slug)} />
-        {ogImage && <meta property="og:image" content={baseUrl + '/' + ogImage} />}
+        {ogImage && <meta property="og:image" content={ogImage.startsWith('http') ? ogImage : baseUrl + ogImage} />}
         {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
 
         <meta
           name="twitter:card"
           content={ogImage ? 'summary_large_image' : 'summary'}
         />
-        {ogImage && <meta name="twitter:image" content={baseUrl + ogImage} />}
+        {ogImage && <meta name="twitter:image" content={ogImage.startsWith('http') ? ogImage : baseUrl + ogImage} />}
         {ogImageAlt && <meta name="twitter:image:alt" content={ogImageAlt} />}
       </Head>
 
@@ -214,8 +214,6 @@ export async function getStaticProps({ defaultLocale, locale, params }) {
     return {
       props: {
         ...data,
-        ogImage: data.cover || null,
-        ogImageAlt: data.coverAlt || null,
         slug: path,
         path: articleSlug,
         content,
