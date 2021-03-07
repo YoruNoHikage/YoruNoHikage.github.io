@@ -22,6 +22,7 @@ theme.overrideThemeStyles = () => ({
     'text-decoration-thickness': '0.1em',
     'background-image': 'none',
     color: '#222',
+    'text-shadow': 'none',
   },
   'a:hover': {
     'text-decoration': 'none',
