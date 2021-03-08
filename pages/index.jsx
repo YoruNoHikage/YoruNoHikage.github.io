@@ -18,22 +18,22 @@ const components = (slug) => ({
   Tweet: dynamic(() =>
     import('react-twitter-embed').then((mod) => mod.TwitterTweetEmbed)
   ),
-  source: ({ src, ...props }) => {
-    if (src.startsWith('http')) return <source src={src} />;
+  source: (props) => {
+    if (src.startsWith('http')) return <source {...props} />;
 
     let importedSrc = '';
 
     try {
       const getVideoSrc = require.context('../articles/', true, /\.(mp4|webm)$/);
 
-      importedSrc = getVideoSrc('./' + slug + '/' + src).default;
+      importedSrc = getVideoSrc('./' + slug + '/' + props.src).default;
     } catch (err) {
-      console.error(`Error loading video '../articles/${slug}/${src}'`, err);
+      console.error(`Error loading video '../articles/${slug}/${props.src}'`, err);
     }
 
     return <source {...props} src={importedSrc} />;
   },
-  img: ({ src, ...props }) => {
+  img: (props) => {
     if (src.startsWith('http')) return <img {...props} />;
 
     let importedSrc = '';
@@ -41,9 +41,9 @@ const components = (slug) => ({
     try {
       const getImages = require.context('../articles/', true, /\.(svg|png|jpe?g|gif)$/);
 
-      importedSrc = getImages('./' + slug + '/' + src).default;
+      importedSrc = getImages('./' + slug + '/' + props.src).default;
     } catch (err) {
-      console.error(`Error loading image '../articles/${slug}/${src}'`, err);
+      console.error(`Error loading image '../articles/${slug}/${props.src}'`, err);
     }
 
     // TODO: better way to scale image
