@@ -19,7 +19,7 @@ const components = (slug) => ({
     import('react-twitter-embed').then((mod) => mod.TwitterTweetEmbed)
   ),
   source: (props) => {
-    if (src.startsWith('http')) return <source {...props} />;
+    if (props.src.startsWith('http')) return <source {...props} />;
 
     let importedSrc = '';
 
@@ -41,7 +41,7 @@ const components = (slug) => ({
     return <source {...props} src={importedSrc} />;
   },
   img: (props) => {
-    if (src.startsWith('http')) return <img {...props} />;
+    if (props.src.startsWith('http')) return <img {...props} />;
 
     let importedSrc = '';
 
