@@ -25,11 +25,18 @@ const components = (slug) => ({
     let importedSrc = '';
 
     try {
-      const getVideoSrc = require.context('../articles/', true, /\.(mp4|webm)$/);
+      const getVideoSrc = require.context(
+        '../articles/',
+        true,
+        /\.(mp4|webm)$/
+      );
 
       importedSrc = getVideoSrc('./' + slug + '/' + props.src).default;
     } catch (err) {
-      console.error(`Error loading video '../articles/${slug}/${props.src}'`, err);
+      console.error(
+        `Error loading video '../articles/${slug}/${props.src}'`,
+        err
+      );
     }
 
     return <source {...props} src={importedSrc} />;
@@ -40,11 +47,18 @@ const components = (slug) => ({
     let importedSrc = '';
 
     try {
-      const getImages = require.context('../articles/', true, /\.(svg|png|jpe?g|gif)$/);
+      const getImages = require.context(
+        '../articles/',
+        true,
+        /\.(svg|png|jpe?g|gif)$/
+      );
 
       importedSrc = getImages('./' + slug + '/' + props.src).default;
     } catch (err) {
-      console.error(`Error loading image '../articles/${slug}/${props.src}'`, err);
+      console.error(
+        `Error loading image '../articles/${slug}/${props.src}'`,
+        err
+      );
     }
 
     // TODO: better way to scale image
@@ -101,7 +115,12 @@ export default function Article({
 
         {otherLangs.length > 0 &&
           [lang, ...otherLangs].map((l) => (
-            <link key={l} rel="alternate" hrefLang={l} href={getAbsoluteURL(l, slug)} />
+            <link
+              key={l}
+              rel="alternate"
+              hrefLang={l}
+              href={getAbsoluteURL(l, slug)}
+            />
           ))}
 
         <meta property="og:locale" content={getAbsoluteURL(lang, slug)} />
@@ -115,14 +134,24 @@ export default function Article({
         <meta property="og:title" content={title} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={getAbsoluteURL(lang, slug)} />
-        {ogImage && <meta property="og:image" content={ogImage.startsWith('http') ? ogImage : baseUrl + ogImage} />}
+        {ogImage && (
+          <meta
+            property="og:image"
+            content={ogImage.startsWith('http') ? ogImage : baseUrl + ogImage}
+          />
+        )}
         {ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
 
         <meta
           name="twitter:card"
           content={ogImage ? 'summary_large_image' : 'summary'}
         />
-        {ogImage && <meta name="twitter:image" content={ogImage.startsWith('http') ? ogImage : baseUrl + ogImage} />}
+        {ogImage && (
+          <meta
+            name="twitter:image"
+            content={ogImage.startsWith('http') ? ogImage : baseUrl + ogImage}
+          />
+        )}
         {ogImageAlt && <meta name="twitter:image:alt" content={ogImageAlt} />}
       </Head>
 

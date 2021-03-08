@@ -24,11 +24,18 @@ const components = (slug) => ({
     let importedSrc = '';
 
     try {
-      const getVideoSrc = require.context('../articles/', true, /\.(mp4|webm)$/);
+      const getVideoSrc = require.context(
+        '../articles/',
+        true,
+        /\.(mp4|webm)$/
+      );
 
       importedSrc = getVideoSrc('./' + slug + '/' + props.src).default;
     } catch (err) {
-      console.error(`Error loading video '../articles/${slug}/${props.src}'`, err);
+      console.error(
+        `Error loading video '../articles/${slug}/${props.src}'`,
+        err
+      );
     }
 
     return <source {...props} src={importedSrc} />;
@@ -39,11 +46,18 @@ const components = (slug) => ({
     let importedSrc = '';
 
     try {
-      const getImages = require.context('../articles/', true, /\.(svg|png|jpe?g|gif)$/);
+      const getImages = require.context(
+        '../articles/',
+        true,
+        /\.(svg|png|jpe?g|gif)$/
+      );
 
       importedSrc = getImages('./' + slug + '/' + props.src).default;
     } catch (err) {
-      console.error(`Error loading image '../articles/${slug}/${props.src}'`, err);
+      console.error(
+        `Error loading image '../articles/${slug}/${props.src}'`,
+        err
+      );
     }
 
     // TODO: better way to scale image
