@@ -24,7 +24,7 @@ async function generateSitemap() {
         if (getStaticPaths) {
           const { paths } = await getStaticPaths();
 
-          paths.forEach(({ params }) => {
+          paths.forEach(({ params, locale }) => {
             let pathToBuild = path.replace('./', '');
             Object.entries(params).forEach(([key, value]) => {
               const isSplat = Array.isArray(value);
@@ -35,7 +35,7 @@ async function generateSitemap() {
             });
 
             smStream.write({
-              url: pathToBuild.replace('index.jsx', '').replace('.jsx', ''),
+              url: (locale !== 'en' ? locale + '/' : '') + pathToBuild.replace('index.jsx', '').replace('.jsx', ''),
             });
           });
         }
