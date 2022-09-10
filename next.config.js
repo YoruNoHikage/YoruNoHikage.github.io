@@ -41,6 +41,8 @@ const mediaLoader = (nextConfig = {}) => ({
 });
 
 module.exports = withPlugins([[mediaLoader], [markdownLoader]], {
+  target: 'serverless',
+
   i18n: {
     locales: ['en', 'fr', 'ja', 'br'],
     defaultLocale: 'en',
