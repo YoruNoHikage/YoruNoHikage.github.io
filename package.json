@@ -53,5 +53,9 @@
     "stringify-object": "^3.3.0",
     "terser-webpack-plugin": "^4",
     "webpack": "^4"
+  },
+  "engines": {
+    "npm": "^8",
+    "node": "^16"
   }
 }
