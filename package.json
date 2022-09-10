@@ -3,7 +3,7 @@
   "name": "next-lumen",
   "description": "YoruNoHikage's blog",
   "scripts": {
-    "build": "next build && yarn build:sitemap",
+    "build": "next build && npm run build:sitemap",
     "build:sitemap": "node ./.next/server/scripts/generate-sitemap.js",
     "dev": "next",
     "start": "next start"
